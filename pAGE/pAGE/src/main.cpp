@@ -1,5 +1,9 @@
 #include <SDL.h>
 #include <entt/entt.hpp>
+#include <rapidjson/document.h>
+#include <rapidjson/writer.h>
+#include <rapidjson/stringbuffer.h>
+#include <iostream>
 
 SDL_Window* window = NULL;
 SDL_Surface* surface = NULL;
@@ -21,6 +25,19 @@ int main(int arg, char* argv[])
     rec.y = 10,
         rec.w = 20;
     rec.h = 20;
+
+    const char* json = "{\"project\":\"rapidjson\",\"stars\":10}";
+    rapidjson::Document d;
+    d.Parse(json);
+
+    rapidjson::Value& s = d["stars"];
+    s.SetInt(s.GetInt() + 1);
+
+    rapidjson::StringBuffer buffer;
+    rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+    d.Accept(writer);
+
+    std::cout << buffer.GetString() << std::endl;
 
     while (isRunning)
     {
