@@ -1,8 +1,5 @@
 #include "launcher.h"
 
-void ShowActionsWindow(std::unique_ptr<ImGui::FileBrowser>& fileDialog);
-void ShowProjectsWindow();
-
 Launcher::Launcher() {
 	isRunning = false;
 	windowWidth = 800;
@@ -61,10 +58,10 @@ void Launcher::Initialize() {
 
 	// check if project list json file exists, if not, create it
 	FILE* projectFile;
-	errno_t err = fopen_s(&projectFile, "projects.json", "rb");
+	errno_t err = fopen_s(&projectFile, "projects.lst", "rb");
 	if (err != 0) {
 		FILE* newProjectFile;
-		err = fopen_s(&newProjectFile, "projects.json", "wb");
+		err = fopen_s(&newProjectFile, "projects.lst", "wb");
 		if (newProjectFile) {
 			fprintf(newProjectFile, "{}");
 			fclose(newProjectFile);
@@ -127,10 +124,10 @@ void Launcher::Render() {
 	ImGui_ImplSDL2_NewFrame();
 	ImGui::NewFrame();
 
-	ShowActionsWindow(fileDialog);
+	ShowActionsWindow();
 	ShowProjectsWindow();
 
-	ImGui::ShowDemoWindow();
+	//ImGui::ShowDemoWindow();
 
 	ImGui::Render();
 	ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData());
@@ -142,7 +139,7 @@ void Launcher::Render() {
 	SDL_RenderPresent(renderer);
 }
 
-void ShowActionsWindow(std::unique_ptr<ImGui::FileBrowser>& fileDialog) {
+void Launcher::ShowActionsWindow() {
 	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoTitleBar |
 		ImGuiWindowFlags_NoScrollbar |
 		ImGuiWindowFlags_NoMove |
@@ -180,9 +177,29 @@ void ShowActionsWindow(std::unique_ptr<ImGui::FileBrowser>& fileDialog) {
 
 		ImGui::Separator();
 
+		if (name[0] == '\0' || path[0] == '\0') {
+			ImGui::BeginDisabled(true);
+		}
+		bool saved = false;
 		if (ImGui::Button("Create", ImVec2(120, 0))) {
+			std::ofstream projectFile("projects.lst", std::ios_base::app);
+			if (projectFile.is_open()) {
+				projectFile << name << "," << path << "\n";
+				projectFile.close();
+			}
+			else {
+				spdlog::error("Could not create project");
+			}
+
+			strcpy_s(name, "");
+			strcpy_s(path, "");
+			saved = true;
 			ImGui::CloseCurrentPopup();
 		}
+		if ((name[0] == '\0' || path[0] == '\0') && !saved) {
+			ImGui::EndDisabled();
+		}
+
 		ImGui::SameLine();
 		if (ImGui::Button("Cancel", ImVec2(120, 0))) {
 			strcpy_s(name, "");
@@ -197,7 +214,7 @@ void ShowActionsWindow(std::unique_ptr<ImGui::FileBrowser>& fileDialog) {
 	ImGui::End();
 }
 
-void ShowProjectsWindow() {
+void Launcher::ShowProjectsWindow() {
 	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoTitleBar |
 		ImGuiWindowFlags_NoMove |
 		ImGuiWindowFlags_NoResize |
@@ -205,6 +222,38 @@ void ShowProjectsWindow() {
 	ImGui::SetNextWindowPos(ImVec2(10, 55), ImGuiCond_FirstUseEver);
 	ImGui::SetNextWindowSize(ImVec2(780, 535), ImGuiCond_FirstUseEver);
 	ImGui::Begin("pAGE Project List", (bool*)true, window_flags);
+
+	std::string line;
+	std::ifstream projectFile("projects.lst");
+	std::vector<std::string> projectNames;
+	std::vector<std::string> projectPaths;
+	if (projectFile.is_open()) {
+		while (getline(projectFile, line)) {
+			projectNames.push_back(line.substr(0, line.find(",")));
+			projectPaths.push_back(line.substr(line.find(",") + 1));
+		}
+	}
+
+	ImGuiTableFlags table_flags = ImGuiTableFlags_BordersV |
+		ImGuiTableFlags_RowBg;
+	if (ImGui::BeginTable("Project List Table", 2, table_flags)) {
+		ImGui::TableSetupColumn("Project Name");
+		ImGui::TableSetupColumn("Project Path");
+		ImGui::TableHeadersRow();
+
+		static int selected = -1;
+		for (int i = 0; i < projectNames.size(); ++i) {
+			ImGui::TableNextRow();
+			ImGui::TableNextColumn();
+			if (ImGui::Selectable(projectNames[i].c_str(), selected == i, ImGuiSelectableFlags_SpanAllColumns)) {
+				selected = i;
+			}
+			ImGui::TableNextColumn();
+			ImGui::Text(projectPaths[i].c_str());
+		}
+		selectedProject = selected;
+		ImGui::EndTable();
+	}
 
 	ImGui::End();
 }
