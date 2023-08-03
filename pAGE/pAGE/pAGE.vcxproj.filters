@@ -42,6 +42,9 @@
     <ClCompile Include="libs\imgui\imgui_widgets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Launcher\launcher.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="libs\glm\detail\_features.hpp">
@@ -1428,6 +1431,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="libs\soloud\soloud_wavstream.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Launcher\launcher.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\interfaces.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -157,6 +157,7 @@
     <ClCompile Include="libs\imgui\imgui_impl_sdlrenderer2.cpp" />
     <ClCompile Include="libs\imgui\imgui_tables.cpp" />
     <ClCompile Include="libs\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="src\Launcher\launcher.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -622,6 +623,8 @@
     <ClInclude Include="libs\spdlog\stopwatch.h" />
     <ClInclude Include="libs\spdlog\tweakme.h" />
     <ClInclude Include="libs\spdlog\version.h" />
+    <ClInclude Include="src\interfaces.h" />
+    <ClInclude Include="src\Launcher\launcher.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="libs\glm\detail\func_common.inl" />
