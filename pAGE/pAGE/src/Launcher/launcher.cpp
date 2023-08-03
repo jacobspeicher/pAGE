@@ -153,8 +153,14 @@ void Launcher::ShowActionsWindow() {
 		ImGui::OpenPopup("Create New Project");
 	}
 	ImGui::SameLine();
-	if (ImGui::Button("Edit Project")) {
+	if (selectedProject == -1) {
+		ImGui::BeginDisabled(true);
+	}
+	if (ImGui::Button("Open Project")) {
 
+	}
+	if (selectedProject == -1) {
+		ImGui::EndDisabled();
 	}
 
 	ImVec2 center = ImGui::GetMainViewport()->GetCenter();
