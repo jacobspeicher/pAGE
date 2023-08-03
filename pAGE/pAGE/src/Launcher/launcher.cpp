@@ -175,17 +175,33 @@ void Launcher::ShowActionsWindow() {
 		}
 		ImGui::InputText("Project Path", path, IM_ARRAYSIZE(path));
 
+		bool exists = false;
+		std::ifstream f(path + std::string("/project.ini"));
+		exists = f.good();
+		f.close();
+
 		ImGui::Separator();
 
-		if (name[0] == '\0' || path[0] == '\0') {
+		if (exists) {
+			ImGui::Text("Project already exists at this location");
+		}
+
+		if (name[0] == '\0' || path[0] == '\0' || exists) {
 			ImGui::BeginDisabled(true);
 		}
 		bool saved = false;
 		if (ImGui::Button("Create", ImVec2(120, 0))) {
-			std::ofstream projectFile("projects.lst", std::ios_base::app);
-			if (projectFile.is_open()) {
-				projectFile << name << "," << path << "\n";
-				projectFile.close();
+			std::ofstream projectListFile("projects.lst", std::ios_base::app);
+			if (projectListFile.is_open()) {
+				projectListFile << name << "," << path << "\n";
+				projectListFile.close();
+
+				std::string projectIniPath = path + std::string("/project.ini");
+				std::ofstream projectIniFile(projectIniPath);
+				if (projectIniFile.is_open()) {
+					projectIniFile << "[pAGE Project]\n";
+					projectIniFile << name << "\n";
+				}
 			}
 			else {
 				spdlog::error("Could not create project");
@@ -196,7 +212,7 @@ void Launcher::ShowActionsWindow() {
 			saved = true;
 			ImGui::CloseCurrentPopup();
 		}
-		if ((name[0] == '\0' || path[0] == '\0') && !saved) {
+		if ((name[0] == '\0' || path[0] == '\0' || exists) && !saved) {
 			ImGui::EndDisabled();
 		}
 
@@ -242,7 +258,7 @@ void Launcher::ShowProjectsWindow() {
 		ImGui::TableHeadersRow();
 
 		static int selected = -1;
-		for (int i = 0; i < projectNames.size(); ++i) {
+		for (int i = 0; i < static_cast<int>(projectNames.size()); ++i) {
 			ImGui::TableNextRow();
 			ImGui::TableNextColumn();
 			if (ImGui::Selectable(projectNames[i].c_str(), selected == i, ImGuiSelectableFlags_SpanAllColumns)) {
