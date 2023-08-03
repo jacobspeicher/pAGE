@@ -10,6 +10,10 @@
 #include <imgui/imgui_impl_sdl2.h>
 #include <imgui/imgui_impl_sdlrenderer2.h>
 
+#include <imfilebrowser/imfilebrowser.h>
+
+#include<memory>
+
 #include "../interfaces.h"
 
 class Launcher : public IContainer {
@@ -27,6 +31,8 @@ public:
 private:
 	SDL_Window* window;
 	SDL_Renderer* renderer;
+
+	std::unique_ptr<ImGui::FileBrowser> fileDialog;
 	
 	bool isRunning;
 

@@ -1,7 +1,12 @@
 #include "launcher.h"
 
+void ShowActionsWindow(std::unique_ptr<ImGui::FileBrowser>& fileDialog);
+void ShowProjectsWindow();
+
 Launcher::Launcher() {
 	isRunning = false;
+	windowWidth = 800;
+	windowHeight = 600;
 	spdlog::info("Launcher created");
 }
 
@@ -48,7 +53,27 @@ void Launcher::Initialize() {
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 
+	ImGuiFileBrowserFlags filebrowser_flags = ImGuiFileBrowserFlags_SelectDirectory |
+		ImGuiFileBrowserFlags_CreateNewDir;
+	fileDialog = std::make_unique<ImGui::FileBrowser>(filebrowser_flags);
+
 	isRunning = true;
+
+	// check if project list json file exists, if not, create it
+	FILE* projectFile;
+	errno_t err = fopen_s(&projectFile, "projects.json", "rb");
+	if (err != 0) {
+		FILE* newProjectFile;
+		err = fopen_s(&newProjectFile, "projects.json", "wb");
+		if (newProjectFile) {
+			fprintf(newProjectFile, "{}");
+			fclose(newProjectFile);
+		}
+	}
+	
+	if (projectFile) {
+		fclose(projectFile);
+	}
 }
 
 void Launcher::Destroy() {
@@ -102,6 +127,9 @@ void Launcher::Render() {
 	ImGui_ImplSDL2_NewFrame();
 	ImGui::NewFrame();
 
+	ShowActionsWindow(fileDialog);
+	ShowProjectsWindow();
+
 	ImGui::ShowDemoWindow();
 
 	ImGui::Render();
@@ -112,4 +140,71 @@ void Launcher::Render() {
 	// everything is rendered in the back buffer and then the front & back buffers are
 	//   swapped so everything is drawn at once
 	SDL_RenderPresent(renderer);
+}
+
+void ShowActionsWindow(std::unique_ptr<ImGui::FileBrowser>& fileDialog) {
+	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoTitleBar |
+		ImGuiWindowFlags_NoScrollbar |
+		ImGuiWindowFlags_NoMove |
+		ImGuiWindowFlags_NoResize |
+		ImGuiWindowFlags_NoCollapse;
+	ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_FirstUseEver);
+	ImGui::SetNextWindowSize(ImVec2(780, 35), ImGuiCond_FirstUseEver);
+	ImGui::Begin("pAGE Launcher Actions", (bool*)true, window_flags);
+
+	if (ImGui::Button("New Project")) {
+		ImGui::OpenPopup("Create New Project");
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Edit Project")) {
+
+	}
+
+	ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+	ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+	if (ImGui::BeginPopupModal("Create New Project", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+		static char name[128] = "";
+		ImGui::InputText("Project Name", name, IM_ARRAYSIZE(name));
+
+		if (ImGui::Button("...", ImVec2(50, 0))) {
+			fileDialog->Open();
+		}
+		fileDialog->Display();
+		ImGui::SameLine();
+		static char path[512] = "";
+		if (fileDialog->HasSelected()) {
+			strcpy_s(path, fileDialog->GetSelected().string().c_str());
+		}
+		ImGui::InputText("Project Path", path, IM_ARRAYSIZE(path));
+
+		ImGui::Separator();
+
+		if (ImGui::Button("Create", ImVec2(120, 0))) {
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Cancel", ImVec2(120, 0))) {
+			strcpy_s(name, "");
+			strcpy_s(path, "");
+			ImGui::CloseCurrentPopup();
+		}
+
+		ImGui::EndPopup();
+	}
+
+
+	ImGui::End();
+}
+
+void ShowProjectsWindow() {
+	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoTitleBar |
+		ImGuiWindowFlags_NoMove |
+		ImGuiWindowFlags_NoResize |
+		ImGuiWindowFlags_NoCollapse;
+	ImGui::SetNextWindowPos(ImVec2(10, 55), ImGuiCond_FirstUseEver);
+	ImGui::SetNextWindowSize(ImVec2(780, 535), ImGuiCond_FirstUseEver);
+	ImGui::Begin("pAGE Project List", (bool*)true, window_flags);
+
+	ImGui::End();
 }

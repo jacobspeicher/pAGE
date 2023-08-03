@@ -475,6 +475,7 @@
     <ClInclude Include="libs\glm\vec3.hpp" />
     <ClInclude Include="libs\glm\vec4.hpp" />
     <ClInclude Include="libs\glm\vector_relational.hpp" />
+    <ClInclude Include="libs\imfilebrowser\imfilebrowser.h" />
     <ClInclude Include="libs\imgui\imconfig.h" />
     <ClInclude Include="libs\imgui\imgui.h" />
     <ClInclude Include="libs\imgui\imgui_impl_sdl2.h" />

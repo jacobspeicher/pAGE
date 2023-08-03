@@ -399,3 +399,6 @@ FodyWeavers.xsd
 
 # ignore dlls
 *.dll
+
+# ignore custom json files
+*.json

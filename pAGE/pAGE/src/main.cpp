@@ -1,7 +1,4 @@
-#include <rapidjson/document.h>
-#include <rapidjson/prettywriter.h>
-#include <SDL.h>
-#include <spdlog/spdlog.h>
+#include <string>
 
 #include "Launcher/launcher.h"
 
@@ -10,6 +7,8 @@ SDL_Surface* surface = NULL;
 
 int main(int argc, char* argv[])
 {
+    std::string workingDirectory = "";
+
     Launcher launcher;
 
     launcher.Initialize();
