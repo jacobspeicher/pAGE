@@ -11,14 +11,11 @@ Launcher::~Launcher() {
 	spdlog::info("Launcher destroyed");
 }
 
-void Launcher::Initialize() {
+void Launcher::Initialize(std::shared_ptr<EventBus>& eventBus) {
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
 		spdlog::error("SDL could not be initialized");
 		return;
 	}
-
-	windowWidth = 800;
-	windowHeight = 600;
 
 	// create SDL window
 	window = SDL_CreateWindow(
@@ -67,6 +64,8 @@ void Launcher::Initialize() {
 			fclose(newProjectFile);
 		}
 	}
+
+	this->eventBus = eventBus;
 	
 	if (projectFile) {
 		fclose(projectFile);
@@ -153,13 +152,14 @@ void Launcher::ShowActionsWindow() {
 		ImGui::OpenPopup("Create New Project");
 	}
 	ImGui::SameLine();
-	if (selectedProject == -1) {
+	if (selected == -1) {
 		ImGui::BeginDisabled(true);
 	}
 	if (ImGui::Button("Open Project")) {
-
+		eventBus->EmitEvent<ProjectLoadedEvent>(selectedProject);
+		isRunning = false;
 	}
-	if (selectedProject == -1) {
+	if (selected == -1) {
 		ImGui::EndDisabled();
 	}
 
@@ -263,17 +263,19 @@ void Launcher::ShowProjectsWindow() {
 		ImGui::TableSetupColumn("Project Path");
 		ImGui::TableHeadersRow();
 
-		static int selected = -1;
+		static int sel = -1;
 		for (int i = 0; i < static_cast<int>(projectNames.size()); ++i) {
 			ImGui::TableNextRow();
 			ImGui::TableNextColumn();
-			if (ImGui::Selectable(projectNames[i].c_str(), selected == i, ImGuiSelectableFlags_SpanAllColumns)) {
-				selected = i;
+			if (ImGui::Selectable(projectNames[i].c_str(), sel == i, ImGuiSelectableFlags_SpanAllColumns)) {
+				sel = i;
+				selectedProject.name = projectNames[i];
+				selectedProject.path = projectPaths[i];
 			}
 			ImGui::TableNextColumn();
 			ImGui::Text(projectPaths[i].c_str());
 		}
-		selectedProject = selected;
+		selected = sel;
 		ImGui::EndTable();
 	}
 

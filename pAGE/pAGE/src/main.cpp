@@ -1,19 +1,16 @@
 #include <string>
 
-#include "Launcher/launcher.h"
+#include "ProjectManager.h"
 
-SDL_Window* window = NULL;
-SDL_Surface* surface = NULL;
+#include "Engine/EventBus/EventBus.h"
+#include "Engine/Events/ProjectLoadedEvent.h"
 
 int main(int argc, char* argv[])
 {
-    std::string workingDirectory = "";
+    ProjectManager manager;
 
-    Launcher launcher;
-
-    launcher.Initialize();
-    launcher.Run();
-    launcher.Destroy();
+    manager.Initialize();
+    manager.Run();
 
     return 0;
 }

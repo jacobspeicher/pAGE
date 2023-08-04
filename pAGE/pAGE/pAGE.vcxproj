@@ -149,6 +149,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Engine\engine.cpp" />
     <ClCompile Include="libs\glm\detail\glm.cpp" />
     <ClCompile Include="libs\imgui\imgui.cpp" />
     <ClCompile Include="libs\imgui\imgui_demo.cpp" />
@@ -161,6 +162,7 @@
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Engine\engine.h" />
     <ClInclude Include="libs\entt\config\config.h" />
     <ClInclude Include="libs\entt\config\macro.h" />
     <ClInclude Include="libs\entt\config\version.h" />
@@ -624,8 +626,13 @@
     <ClInclude Include="libs\spdlog\stopwatch.h" />
     <ClInclude Include="libs\spdlog\tweakme.h" />
     <ClInclude Include="libs\spdlog\version.h" />
+    <ClInclude Include="src\Engine\EventBus\Event.h" />
+    <ClInclude Include="src\Engine\EventBus\EventBus.h" />
+    <ClInclude Include="src\Engine\Events\ProjectLoadedEvent.h" />
     <ClInclude Include="src\interfaces.h" />
     <ClInclude Include="src\Launcher\launcher.h" />
+    <ClInclude Include="src\ProjectManager.h" />
+    <ClInclude Include="src\structs.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="libs\glm\detail\func_common.inl" />

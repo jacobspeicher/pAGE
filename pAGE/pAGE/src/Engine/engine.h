@@ -9,21 +9,20 @@
 
 #include <imfilebrowser/imfilebrowser.h>
 
-#include<memory>
+#include <memory>
 #include <fstream>
+#include <string>
 
-#include "../interfaces.h"
-#include "../Engine/EventBus/EventBus.h"
-#include "../Engine/Events/ProjectLoadedEvent.h"
+#include "EventBus/EventBus.h"
 
 #include "../structs.h"
 
-class Launcher {
+class Engine {
 public:
-	Launcher();
-	~Launcher();
+	Engine();
+	~Engine();
 
-	void Initialize(std::shared_ptr<EventBus>& eventBus);
+	void Initialize(std::shared_ptr<EventBus>& eventBus, Project project);
 	void Destroy();
 	void Setup();
 	void Run();
@@ -31,20 +30,17 @@ public:
 	void Render();
 
 private:
-	void ShowActionsWindow();
-	void ShowProjectsWindow();
-
 	SDL_Window* window;
 	SDL_Renderer* renderer;
 
 	std::shared_ptr<EventBus> eventBus;
 	std::unique_ptr<ImGui::FileBrowser> fileDialog;
-	
+
 	bool isRunning;
 
 	int windowWidth;
 	int windowHeight;
 
-	int selected;
-	Project selectedProject;
+	Project project;
 };
+
