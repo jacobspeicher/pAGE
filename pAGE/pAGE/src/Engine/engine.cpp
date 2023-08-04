@@ -1,4 +1,5 @@
 #include "engine.h"
+#include "Components/TransformComponent.h"
 
 Engine::Engine() {
 	isRunning = false;

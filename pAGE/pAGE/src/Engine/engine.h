@@ -1,5 +1,6 @@
 #pragma once
 
+#include <entt/entt.hpp>
 #include <SDL.h>
 #include <spdlog/spdlog.h>
 
