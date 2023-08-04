@@ -162,6 +162,7 @@
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Engine\Components\TransformComponent.h" />
     <ClInclude Include="src\Engine\engine.h" />
     <ClInclude Include="libs\entt\config\config.h" />
     <ClInclude Include="libs\entt\config\macro.h" />
