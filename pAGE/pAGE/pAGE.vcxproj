@@ -630,6 +630,7 @@
     <ClInclude Include="src\Engine\EventBus\Event.h" />
     <ClInclude Include="src\Engine\EventBus\EventBus.h" />
     <ClInclude Include="src\Engine\Events\ProjectLoadedEvent.h" />
+    <ClInclude Include="src\Engine\Objects\Base.h" />
     <ClInclude Include="src\interfaces.h" />
     <ClInclude Include="src\Launcher\launcher.h" />
     <ClInclude Include="src\ProjectManager.h" />
