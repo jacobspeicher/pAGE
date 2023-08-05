@@ -71,7 +71,6 @@ void Engine::Destroy() {
 }
 
 void Engine::Setup() {
-
 }
 
 void Engine::Run() {
