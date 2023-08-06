@@ -90,6 +90,8 @@ void Engine::Initialize(std::shared_ptr<EventBus>& eventBus, Project project) {
 	this->eventBus = eventBus;
 
 	isRunning = true;
+
+	camera.Position = glm::vec3(0.0f, 0.0f, 3.0f);
 }
 
 void Engine::Destroy() {
@@ -198,7 +200,7 @@ void Engine::Render() {
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 	glClearColor(.2f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	RenderSystem(registry);
+	RenderSystem(registry, camera);
 
 	glViewport(0, 0, windowWidth, windowHeight);
 	// render main UI

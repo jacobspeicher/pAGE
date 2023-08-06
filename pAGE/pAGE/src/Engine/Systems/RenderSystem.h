@@ -10,8 +10,9 @@
 
 #include "../Components/TransformComponent.h"
 #include "../Components/ModelComponent.h"
+#include "../Objects/Camera.h"
 
-void RenderSystem(entt::registry& registry) {
+void RenderSystem(entt::registry& registry, const Camera& camera) {
 	const auto view = registry.view<TransformComponent, ModelComponent>();
 	for (const entt::entity entity : view) {
 		const auto& transform = view.get<TransformComponent>(entity);
