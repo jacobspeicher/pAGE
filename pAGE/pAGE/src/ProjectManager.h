@@ -36,6 +36,7 @@ public:
 			spdlog::info("ProjectManager: Running engine");
 			Engine engine;
 			engine.Initialize(eventBus, project);
+			engine.Setup();
 			engine.Run();
 			engine.Destroy();
 		}

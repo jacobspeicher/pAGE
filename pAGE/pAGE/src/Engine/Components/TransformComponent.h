@@ -2,7 +2,9 @@
 
 #include <glm/glm.hpp>
 
-struct TransformComponent {
+#include "../../structs.h"
+
+struct TransformComponent : IComponent {
 	glm::vec3 position;
 	glm::vec3 scale;
 	glm::vec3 rotation;
@@ -15,5 +17,6 @@ struct TransformComponent {
 		this->position = position;
 		this->scale = scale;
 		this->rotation = rotation;
+		this->name = "Transform Component";
 	}
 };

@@ -73,7 +73,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>C:\SDL2\include;N:\pAGE\pAGE\pAGE\libs;$(IncludePath)</IncludePath>
-    <LibraryPath>N:\pAGE\pAGE\pAGE\libs\lua;C:\SDL2\lib\x86;$(LibraryPath)</LibraryPath>
+    <LibraryPath>N:\pAGE\pAGE\pAGE\libs\glew;N:\pAGE\pAGE\pAGE\libs\lua;C:\SDL2\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -98,7 +98,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_mixer.lib;SDL2_ttf.lib;liblua54.a;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_mixer.lib;SDL2_ttf.lib;liblua54.a;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -149,6 +149,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="libs\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="src\Engine\engine.cpp" />
     <ClCompile Include="libs\glm\detail\glm.cpp" />
     <ClCompile Include="libs\imgui\imgui.cpp" />
@@ -162,6 +163,14 @@
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="libs\entt\entity\registry.hpp" />
+    <ClInclude Include="libs\glew\eglew.h" />
+    <ClInclude Include="libs\glew\glew.h" />
+    <ClInclude Include="libs\glew\glxew.h" />
+    <ClInclude Include="libs\glew\wglew.h" />
+    <ClInclude Include="libs\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="libs\imgui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="src\Engine\Components\ModelComponent.h" />
     <ClInclude Include="src\Engine\Components\TransformComponent.h" />
     <ClInclude Include="src\Engine\engine.h" />
     <ClInclude Include="libs\entt\config\config.h" />
@@ -195,7 +204,6 @@
     <ClInclude Include="libs\entt\entity\mixin.hpp" />
     <ClInclude Include="libs\entt\entity\observer.hpp" />
     <ClInclude Include="libs\entt\entity\organizer.hpp" />
-    <ClInclude Include="libs\entt\entity\registry.hpp" />
     <ClInclude Include="libs\entt\entity\runtime_view.hpp" />
     <ClInclude Include="libs\entt\entity\snapshot.hpp" />
     <ClInclude Include="libs\entt\entity\sparse_set.hpp" />
@@ -630,11 +638,12 @@
     <ClInclude Include="src\Engine\EventBus\Event.h" />
     <ClInclude Include="src\Engine\EventBus\EventBus.h" />
     <ClInclude Include="src\Engine\Events\ProjectLoadedEvent.h" />
-    <ClInclude Include="src\Engine\Objects\Base.h" />
-    <ClInclude Include="src\interfaces.h" />
+    <ClInclude Include="src\Engine\Objects\Object.h" />
+    <ClInclude Include="src\Engine\Systems\RenderSystem.h" />
     <ClInclude Include="src\Launcher\launcher.h" />
     <ClInclude Include="src\ProjectManager.h" />
     <ClInclude Include="src\structs.h" />
+    <ClInclude Include="src\Utils\shader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="libs\glm\detail\func_common.inl" />
@@ -769,6 +778,8 @@
     <None Include="libs\glm\gtx\vector_angle.inl" />
     <None Include="libs\glm\gtx\vector_query.inl" />
     <None Include="libs\glm\gtx\wrap.inl" />
+    <None Include="src\Shaders\Basic\basic.frag" />
+    <None Include="src\Shaders\Basic\basic.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

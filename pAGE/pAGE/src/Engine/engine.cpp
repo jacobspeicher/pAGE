@@ -1,5 +1,16 @@
 #include "engine.h"
+
 #include "Components/TransformComponent.h"
+#include "Components/ModelComponent.h"
+
+#include "Systems/RenderSystem.h"
+
+float triangleVertices[] = {
+	// pos					color
+	-1.0f,	0.5f,	0.0f,	1.0f,	0.0f,	0.0f, // left
+	-0.5f,	1.0f,	0.0f,	0.0f,	1.0f,	0.0f, // top
+	0.0f,	0.5f,	0.0f,	0.0f,	0.0f,	1.0f, // right
+};
 
 Engine::Engine() {
 	isRunning = false;
@@ -13,6 +24,13 @@ Engine::~Engine() {
 }
 
 void Engine::Initialize(std::shared_ptr<EventBus>& eventBus, Project project) {
+	// define GL (3.3) and GLSL (330) versions
+	const char* glsl_version = "#version 330";
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
 		spdlog::error("SDL could not be initialized");
 		return;
@@ -28,28 +46,36 @@ void Engine::Initialize(std::shared_ptr<EventBus>& eventBus, Project project) {
 		SDL_WINDOWPOS_CENTERED,
 		windowWidth,
 		windowHeight,
-		SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
+		SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL
 	);
 	if (!window) {
 		spdlog::error("SDL Window could not be created");
 		return;
 	}
 
-	// create SDL renderer
-	// -1 in arg[1] tells renderer to use the first available rendering driver
-	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-	if (!renderer) {
-		spdlog::error("SDL Renderer could not be created");
+	// create opengl context
+	context = SDL_GL_CreateContext(window);
+	if (context == NULL) {
+		spdlog::error("OpenGL context could not be created");
+		return;
+	}
+	SDL_GL_MakeCurrent(window, context);
+
+	// initialize glew
+	glewExperimental = GL_TRUE;
+	GLenum glewError = glewInit();
+	if (glewError != GLEW_OK) {
+		spdlog::error("GLEW could not be initialized");
 		return;
 	}
 
 	// initialize imgui
 	ImGui::CreateContext();
-	ImGui_ImplSDL2_InitForSDLRenderer(window, renderer);
-	ImGui_ImplSDLRenderer2_Init(renderer);
+	ImGui_ImplSDL2_InitForOpenGL(window, context);
+	ImGui_ImplOpenGL3_Init(glsl_version);
 
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+	io = &ImGui::GetIO(); (void)io;
+	io->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 
 	ImGuiFileBrowserFlags filebrowser_flags = ImGuiFileBrowserFlags_CreateNewDir |
 		ImGuiFileBrowserFlags_EnterNewFilename;
@@ -60,10 +86,10 @@ void Engine::Initialize(std::shared_ptr<EventBus>& eventBus, Project project) {
 }
 
 void Engine::Destroy() {
-	ImGui_ImplSDLRenderer2_Shutdown();
+	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplSDL2_Shutdown();
 	ImGui::DestroyContext();
-	SDL_DestroyRenderer(renderer);
+	SDL_GL_DeleteContext(context);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
 
@@ -71,6 +97,40 @@ void Engine::Destroy() {
 }
 
 void Engine::Setup() {
+	unsigned int triangleVAO;
+	unsigned int triangleVBO;
+
+	glGenVertexArrays(1, &triangleVAO);
+	glGenBuffers(1, &triangleVBO);
+
+	// bind triangle object
+	glBindVertexArray(triangleVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, triangleVBO);
+
+	// copy vertex data into the VAO
+	glBufferData(GL_ARRAY_BUFFER, sizeof(triangleVertices), triangleVertices, GL_STATIC_DRAW);
+
+	// interpret the vertex data for positions
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+	// enable the vertex attrib with the vertex attrib location
+	glEnableVertexAttribArray(0);
+
+	// interpret the vertex data for colors and enable
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+
+	Shader basicShader("Basic/basic.vert", "Basic/basic.frag");
+	for (int i = 0; i < 1; ++i) {
+		auto triangle = registry.create();
+		Object object(triangle);
+		object.components.push_back(
+			registry.emplace<TransformComponent>(triangle, glm::vec3(0.5f, 0.5f, 0.0f), glm::vec3(1.0f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 90.0f * (i % 3)))
+		);
+		object.components.push_back(
+			registry.emplace<ModelComponent>(triangle, triangleVAO, basicShader)
+		);
+		objects.push_back(object);
+	}
 }
 
 void Engine::Run() {
@@ -100,18 +160,20 @@ void Engine::ProcessInput() {
 }
 
 void Engine::Render() {
-	// set the background color of the whole window
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-	SDL_RenderClear(renderer);
+	glViewport(0, 0, (int)io->DisplaySize.x, (int)io->DisplaySize.y);
+	glClearColor(0, 0, 0, 255);
+	glClear(GL_COLOR_BUFFER_BIT);
 
-	ImGui_ImplSDLRenderer2_NewFrame();
+	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame();
 	ImGui::NewFrame();
 
 	ImGui::ShowDemoWindow();
 
-	ImGui::Render();
-	ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData());
+	RenderSystem(registry);
 
-	SDL_RenderPresent(renderer);
+	ImGui::Render(); 
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+	SDL_GL_SwapWindow(window);
 }
