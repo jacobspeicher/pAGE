@@ -11,9 +11,9 @@ namespace ComponentUI {
 	void PopulateTransformComponent(TransformComponent& transform) {
 		ImGui::Text(transform.name.c_str());
 		ImGui::Separator();
-		ImGui::SliderFloat3("position", glm::value_ptr(transform.position), -1.0f, 1.0f);
-		ImGui::SliderFloat3("scale", glm::value_ptr(transform.scale), 0.0f, 1.0f);
-		ImGui::SliderFloat3("rotation", glm::value_ptr(transform.rotation), 0.0f, 360.0f);
+		ImGui::DragFloat3("position", glm::value_ptr(transform.position), 0.1f);
+		ImGui::DragFloat3("scale", glm::value_ptr(transform.scale), 0.1f);
+		ImGui::DragFloat3("rotation", glm::value_ptr(transform.rotation), 0.1f, 0.0f, 360.0f);
 	}
 
 	void PopulateModelComponent(ModelComponent& model) {

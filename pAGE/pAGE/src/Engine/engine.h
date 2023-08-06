@@ -7,6 +7,7 @@
 #include <spdlog/spdlog.h>
 
 #include <imgui/imgui.h>
+#include <imgui/imgui_stdlib.h>
 #include <imgui/imgui_impl_sdl2.h>
 #include <imgui/imgui_impl_opengl3.h>
 
@@ -47,10 +48,15 @@ private:
 
 	int windowWidth;
 	int windowHeight;
+	unsigned int fbo;
+	unsigned int rbo;
+	unsigned int texColorBuffer;
 
 	Project project;
 
 	std::vector<Object> objects;
 	entt::registry registry;
+
+	int selected;
 };
 
