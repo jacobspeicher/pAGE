@@ -172,6 +172,8 @@
     <ClInclude Include="libs\imgui\imgui_impl_opengl3.h" />
     <ClInclude Include="libs\imgui\imgui_impl_opengl3_loader.h" />
     <ClInclude Include="libs\imgui\imgui_stdlib.h" />
+    <ClInclude Include="src\Engine\AssetStore\Models\Cube.h" />
+    <ClInclude Include="src\Engine\AssetStore\Shapes\Triangle.h" />
     <ClInclude Include="src\Engine\Components\ComponentUI.h" />
     <ClInclude Include="src\Engine\Components\ModelComponent.h" />
     <ClInclude Include="src\Engine\Components\TransformComponent.h" />
@@ -784,6 +786,8 @@
     <None Include="libs\glm\gtx\wrap.inl" />
     <None Include="src\Shaders\Basic\basic2D.frag" />
     <None Include="src\Shaders\Basic\basic2D.vert" />
+    <None Include="src\Shaders\Basic\basic3D.frag" />
+    <None Include="src\Shaders\Basic\basic3D.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -17,10 +17,13 @@
 #include <fstream>
 #include <string>
 
-#include "Objects/Object.h"
-#include "EventBus/EventBus.h"
+#include "AssetStore/Shapes/Triangle.h"
+//#include "AssetStore/Models/Cube.h"
 
+#include "EventBus/EventBus.h"
 #include "Objects/Camera.h"
+#include "Objects/Object.h"
+
 #include "../Utils/shader.h"
 #include "../structs.h"
 

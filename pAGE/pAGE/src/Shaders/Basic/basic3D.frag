@@ -35,7 +35,7 @@ void main() {
     FragColor = result;
 }
 
-vec4 CalcDirLight(DirLight light, vec3 Normal, vec3 viewDir) {
+vec4 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir) {
     vec3 lightDir = normalize(-light.direction);
 
     // diffuse shading

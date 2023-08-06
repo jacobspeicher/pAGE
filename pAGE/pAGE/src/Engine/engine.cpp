@@ -7,13 +7,6 @@
 
 #include "Components/ComponentUI.h"
 
-float triangleVertices[] = {
-	// pos					color
-	-0.5f,	-0.5f,	0.0f,	1.0f,	0.0f,	0.0f, // left
-	0.5f,	-0.5f,	0.0f,	0.0f,	1.0f,	0.0f, // top
-	0.0f,	0.5f,	0.0f,	0.0f,	0.0f,	1.0f, // right
-};
-
 void ShowInspector(entt::registry& registry, std::vector<Object>& objects, const int& selected);
 void ShowSceneHierarchy(std::vector<Object> objects, int& selected);
 void ShowScene(ImTextureID texture);
@@ -108,35 +101,17 @@ void Engine::Destroy() {
 }
 
 void Engine::Setup() {
-	unsigned int triangleVAO;
-	unsigned int triangleVBO;
-
-	glGenVertexArrays(1, &triangleVAO);
-	glGenBuffers(1, &triangleVBO);
-
-	// bind triangle object
-	glBindVertexArray(triangleVAO);
-	glBindBuffer(GL_ARRAY_BUFFER, triangleVBO);
-
-	// copy vertex data into the VAO
-	glBufferData(GL_ARRAY_BUFFER, sizeof(triangleVertices), triangleVertices, GL_STATIC_DRAW);
-
-	// interpret the vertex data for positions
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-	// enable the vertex attrib with the vertex attrib location
-	glEnableVertexAttribArray(0);
-
-	// interpret the vertex data for colors and enable
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
+	Triangle triangleShape;
 
 	Shader basic2DShader("Basic/basic2D.vert", "Basic/basic2D.frag");
+	Shader basic3DShader("Basic/basic3D.vert", "Basic/basic3D.frag");
+
 	for (int i = 0; i < 1; ++i) {
 		auto triangle = registry.create();
 		Object object(triangle);
 		object.name = "triangle";
-		registry.emplace<TransformComponent>(triangle, glm::vec3(0.5f, 0.5f, 0.0f), glm::vec3(1.0f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 90.0f * (i % 3)));
-		registry.emplace<ModelComponent>(triangle, triangleVAO, basic2DShader);
+		registry.emplace<TransformComponent>(triangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 90.0f * (i % 3)));
+		registry.emplace<ModelComponent>(triangle, triangleShape.vao, basic2DShader);
 		objects.push_back(object);
 	}
 
