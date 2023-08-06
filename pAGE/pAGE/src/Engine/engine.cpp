@@ -5,12 +5,16 @@
 
 #include "Systems/RenderSystem.h"
 
+#include "Components/ComponentUI.h"
+
 float triangleVertices[] = {
 	// pos					color
 	-1.0f,	0.5f,	0.0f,	1.0f,	0.0f,	0.0f, // left
 	-0.5f,	1.0f,	0.0f,	0.0f,	1.0f,	0.0f, // top
 	0.0f,	0.5f,	0.0f,	0.0f,	0.0f,	1.0f, // right
 };
+
+void ShowInspector(entt::registry& registry, Object& object);
 
 Engine::Engine() {
 	isRunning = false;
@@ -123,12 +127,9 @@ void Engine::Setup() {
 	for (int i = 0; i < 1; ++i) {
 		auto triangle = registry.create();
 		Object object(triangle);
-		object.components.push_back(
-			registry.emplace<TransformComponent>(triangle, glm::vec3(0.5f, 0.5f, 0.0f), glm::vec3(1.0f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 90.0f * (i % 3)))
-		);
-		object.components.push_back(
-			registry.emplace<ModelComponent>(triangle, triangleVAO, basicShader)
-		);
+		object.name = "triangle";
+		registry.emplace<TransformComponent>(triangle, glm::vec3(0.5f, 0.5f, 0.0f), glm::vec3(1.0f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 90.0f * (i % 3)));
+		registry.emplace<ModelComponent>(triangle, triangleVAO, basicShader);
 		objects.push_back(object);
 	}
 }
@@ -169,6 +170,7 @@ void Engine::Render() {
 	ImGui::NewFrame();
 
 	ImGui::ShowDemoWindow();
+	ShowInspector(registry, objects[0]);
 
 	RenderSystem(registry);
 
@@ -176,4 +178,19 @@ void Engine::Render() {
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 	SDL_GL_SwapWindow(window);
+}
+
+void ShowInspector(entt::registry& registry, Object& object) {
+	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize |
+		ImGuiWindowFlags_NoCollapse;
+	ImGui::Begin(object.name.c_str(), NULL, window_flags);
+
+	if (registry.all_of<TransformComponent>(object.entity)) {
+		ComponentUI::PopulateTransformComponent(registry.get<TransformComponent>(object.entity));
+	}
+	if (registry.all_of<ModelComponent>(object.entity)) {
+		ComponentUI::PopulateModelComponent(registry.get<ModelComponent>(object.entity));
+	}
+
+	ImGui::End();
 }
