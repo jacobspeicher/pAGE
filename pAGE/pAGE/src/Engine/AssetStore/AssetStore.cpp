@@ -33,3 +33,12 @@ void AssetStore::AddShader(const std::string& assetId, std::shared_ptr<Shader> s
 std::shared_ptr<Shader> AssetStore::GetShader(const std::string& assetId) const {
 	return shaders.at(assetId);
 }
+
+void AssetStore::AddTexture(const std::string& assetId, std::shared_ptr<Texture> texture) {
+	textures.emplace(assetId, texture);
+	spdlog::info("Texture {0} added to asset store", assetId);
+}
+
+std::shared_ptr<Texture> AssetStore::GetTexture(const std::string& assetId) const {
+	return textures.at(assetId);
+}

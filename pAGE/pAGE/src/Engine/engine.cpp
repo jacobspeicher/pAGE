@@ -2,20 +2,21 @@
 
 #include "Components/TransformComponent.h"
 #include "Components/ModelComponent.h"
+#include "Components/ShapeComponent.h"
 
 #include "Systems/RenderSystem.h"
 
 #include "Components/ComponentUI.h"
 
-void ShowInspector(entt::registry& registry, std::vector<Object>& objects, const int& selected);
-void ShowSceneHierarchy(entt::registry& registry, AssetStore& assetStore, std::vector<Object>& objects, int& selected);
-void ShowScene(ImTextureID texture);
-
 Engine::Engine() {
+	/* SDL */
 	isRunning = false;
 	windowWidth = 1920;
 	windowHeight = 1080;
+
+	/* UI */
 	selected = -1;
+	mouseIsCaptured = false;
 	spdlog::info("Engine created");
 }
 
@@ -103,6 +104,7 @@ void Engine::Destroy() {
 void Engine::Setup() {
 	OpenGLObjectsLoader::LoadOpenGLObjects(assetStore);
 	ShaderLoader::LoadShaders(assetStore);
+	TextureLoader::LoadTextures(assetStore);
 
 	glGenFramebuffers(1, &fbo);
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
@@ -130,6 +132,8 @@ void Engine::Setup() {
 		spdlog::error("Framebuffer is not complete\n{0}", glCheckFramebufferStatus(GL_FRAMEBUFFER));
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	glEnable(GL_DEPTH_TEST);
 }
 
 void Engine::Run() {
@@ -154,6 +158,10 @@ void Engine::ProcessInput() {
 			if (sdlEvent.key.keysym.sym == SDLK_ESCAPE)
 				isRunning = false;
 			break;
+		case SDL_KEYUP:
+			if (sdlEvent.key.keysym.sym == SDLK_F12)
+				if (sdlEvent.key.keysym.mod & KMOD_SHIFT)
+					mouseIsCaptured = !mouseIsCaptured;
 		}
 	}
 }
@@ -178,8 +186,8 @@ void Engine::Render() {
 
 	ImGui::ShowDemoWindow();
 
-	ShowSceneHierarchy(registry, assetStore, objects, selected);
-	ShowInspector(registry, objects, selected);
+	ShowSceneHierarchy();
+	ShowInspector();
 	ShowScene((ImTextureID)texColorBuffer);
 
 	ImGui::Render(); 
@@ -188,7 +196,7 @@ void Engine::Render() {
 	SDL_GL_SwapWindow(window);
 }
 
-void ShowInspector(entt::registry& registry, std::vector<Object>& objects, const int& selected) {
+void Engine::ShowInspector() {
 	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoMove |
 		ImGuiWindowFlags_NoResize |
 		ImGuiWindowFlags_NoCollapse;
@@ -216,7 +224,7 @@ void ShowInspector(entt::registry& registry, std::vector<Object>& objects, const
 	ImGui::End();
 }
 
-void ShowSceneHierarchy(entt::registry& registry, AssetStore& assetStore, std::vector<Object>& objects, int& selected) {
+void Engine::ShowSceneHierarchy() {
 	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoMove |
 		ImGuiWindowFlags_NoResize |
 		ImGuiWindowFlags_NoCollapse |
@@ -233,12 +241,25 @@ void ShowSceneHierarchy(entt::registry& registry, AssetStore& assetStore, std::v
 				Object object(triangle);
 				object.name = "Triangle (" + std::to_string((long)triangle) + ")";
 				registry.emplace<TransformComponent>(triangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(0.0f));
-				registry.emplace<ModelComponent>(triangle, assetStore.GetOpenGLObject("triangle")->vao, assetStore.GetShader("basic2D"));
+				registry.emplace<ShapeComponent>(triangle, assetStore.GetOpenGLObject("triangle")->vao, assetStore.GetShader("basic2D"));
 				objects.push_back(object);
 			}
 			ImGui::EndMenu();
 		}
 		if (ImGui::BeginMenu("Create 3D Object")) {
+			if (ImGui::MenuItem("Cube")) {
+				std::shared_ptr<Shader> shader = assetStore.GetShader("basic3D");
+
+				auto cube = registry.create();
+				Object object(cube);
+				object.name = "Cube (" + std::to_string((long)cube) + ")";
+				registry.emplace<TransformComponent>(cube, glm::vec3(0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f));
+				registry.emplace<ModelComponent>(cube, 
+					assetStore.GetOpenGLObject("cube")->vao, 
+					assetStore.GetShader("basic3D"),
+					assetStore.GetTexture("container"));
+				objects.push_back(object);
+			}
 			ImGui::EndMenu();
 		}
 		ImGui::EndMenuBar();
@@ -256,21 +277,46 @@ void ShowSceneHierarchy(entt::registry& registry, AssetStore& assetStore, std::v
 	ImGui::End();
 }
 
-void ShowScene(ImTextureID texture) {
+void Engine::ShowScene(ImTextureID texture) {
 	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoResize |
 		ImGuiWindowFlags_NoMove |
 		ImGuiWindowFlags_NoCollapse |
-		ImGuiWindowFlags_NoScrollbar;
+		ImGuiWindowFlags_NoScrollbar |
+		ImGuiWindowFlags_NoBringToFrontOnFocus;
 	ImGui::SetNextWindowPos(ImVec2(352, 10));
 	ImGui::SetNextWindowSize(ImVec2(1216, 755));
+	
+	ImGuiWindowFlags overlay_window_flags = ImGuiWindowFlags_NoDecoration |
+		ImGuiWindowFlags_NoSavedSettings |
+		ImGuiWindowFlags_AlwaysAutoResize |
+		ImGuiWindowFlags_NoNav |
+		ImGuiWindowFlags_NoMove;
 
 	ImGui::Begin("Scene", NULL, window_flags);
 
 	ImGui::Image(texture, ImVec2(1200, 720), ImVec2(0, 1), ImVec2(1, 0));
 
+	ImVec2 windowPos = ImGui::GetWindowPos();
+	ImVec2 windowSize = ImGui::GetWindowSize();
+	ImVec2 childWindowPos, childWindowPosPivot;
+	childWindowPos.x = windowPos.x + windowSize.x - 10.0f;
+	childWindowPos.y = windowPos.y + 30.0f;
+	childWindowPosPivot.x = 1.0f;
+	childWindowPosPivot.y = 0.0f;
+	ImGui::SetNextWindowPos(childWindowPos, ImGuiCond_Always, childWindowPosPivot);
+	ImGui::SetNextWindowBgAlpha(0.35f);
+	ImGui::Begin("Scene Overlay", NULL, overlay_window_flags);
+
+	if (!mouseIsCaptured)
+		ImGui::Text("Press Shift+F12 to capture mouse");
+	else
+		ImGui::Text("Press Shift+F12 to release mouse");
+
+	ImGui::End();
+
 	if (ImGui::IsItemHovered()) {
 		if (ImGui::IsMouseClicked(ImGuiMouseButton_Left, false)) {
-			spdlog::info("Capture mouse now");
+			spdlog::info("fire ray to find object to select");
 		}
 	}
 	

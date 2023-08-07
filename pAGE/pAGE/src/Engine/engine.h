@@ -24,6 +24,7 @@
 #include "Utils/shader.h"
 #include "Utils/Loaders/OpenGLObjectsLoader.h"
 #include "Utils/Loaders/ShaderLoader.h"
+#include "Utils/Loaders/TextureLoader.h"
 
 #include "../structs.h"
 
@@ -38,6 +39,11 @@ public:
 	void Run();
 	void ProcessInput();
 	void Render();
+
+	/* UI */
+	void ShowInspector();
+	void ShowSceneHierarchy();
+	void ShowScene(ImTextureID texture);
 
 private:
 	/* SDL */
@@ -74,5 +80,7 @@ private:
 	unsigned int fbo;
 	unsigned int rbo;
 	unsigned int texColorBuffer;
+	// whether the mouse is captured by the Scene window
+	bool mouseIsCaptured;
 };
 

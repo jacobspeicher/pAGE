@@ -6,6 +6,7 @@
 
 #include "TransformComponent.h"
 #include "ModelComponent.h"
+#include "ShapeComponent.h"
 
 namespace ComponentUI {
 	void PopulateTransformComponent(TransformComponent& transform) {
@@ -18,6 +19,12 @@ namespace ComponentUI {
 
 	void PopulateModelComponent(ModelComponent& model) {
 		ImGui::Text(model.name.c_str());
+		ImGui::Separator();
+		ImGui::Text("Nothing to see here");
+	}
+
+	void PopulateShapeComponent(ShapeComponent& shape) {
+		ImGui::Text(shape.name.c_str());
 		ImGui::Separator();
 		ImGui::Text("Nothing to see here");
 	}
