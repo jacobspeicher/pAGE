@@ -54,6 +54,15 @@
     <ClCompile Include="libs\imgui\imgui_stdlib.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Engine\AssetStore\AssetStore.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Utils\Loaders\OpenGLObjectsLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Utils\Loaders\ShaderLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="libs\glm\detail\_features.hpp">
@@ -1484,7 +1493,7 @@
     <ClInclude Include="libs\glew\wglew.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Utils\shader.h">
+    <ClInclude Include="src\Engine\Utils\shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\Systems\RenderSystem.h">
@@ -1512,6 +1521,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\AssetStore\Models\Cube.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\AssetStore\AssetStore.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Utils\Loaders\OpenGLObjectsLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Utils\Loaders\ShaderLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1912,9 +1930,9 @@
     <None Include="libs\glm\gtx\wrap.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="src\Shaders\Basic\basic2D.frag" />
-    <None Include="src\Shaders\Basic\basic2D.vert" />
-    <None Include="src\Shaders\Basic\basic3D.frag" />
-    <None Include="src\Shaders\Basic\basic3D.vert" />
+    <None Include="src\Engine\Shaders\Basic\basic2D.frag" />
+    <None Include="src\Engine\Shaders\Basic\basic2D.vert" />
+    <None Include="src\Engine\Shaders\Basic\basic3D.frag" />
+    <None Include="src\Engine\Shaders\Basic\basic3D.vert" />
   </ItemGroup>
 </Project>

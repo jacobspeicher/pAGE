@@ -31,7 +31,7 @@ void RenderSystem(entt::registry& registry, const Camera& camera) {
 
 		modelComponent.shader->Use();
 		modelComponent.shader->SetMat4("model", model);
-		modelComponent.shader->SetVec3("color", glm::vec3(255, 255, 255));
+		modelComponent.shader->SetVec3("color", glm::vec3(1.0f, 1.0f, 1.0f));
 
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 	}

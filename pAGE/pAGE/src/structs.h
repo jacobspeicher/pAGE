@@ -14,3 +14,9 @@ struct Project {
 struct IComponent {
 	std::string name;
 };
+
+struct IOpenGLObject {
+public:
+	unsigned int vao;
+	unsigned int vbo;
+};

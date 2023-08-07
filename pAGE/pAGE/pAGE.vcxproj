@@ -151,6 +151,7 @@
   <ItemGroup>
     <ClCompile Include="libs\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="libs\imgui\imgui_stdlib.cpp" />
+    <ClCompile Include="src\Engine\AssetStore\AssetStore.cpp" />
     <ClCompile Include="src\Engine\engine.cpp" />
     <ClCompile Include="libs\glm\detail\glm.cpp" />
     <ClCompile Include="libs\imgui\imgui.cpp" />
@@ -160,6 +161,8 @@
     <ClCompile Include="libs\imgui\imgui_impl_sdlrenderer2.cpp" />
     <ClCompile Include="libs\imgui\imgui_tables.cpp" />
     <ClCompile Include="libs\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="src\Engine\Utils\Loaders\OpenGLObjectsLoader.cpp" />
+    <ClCompile Include="src\Engine\Utils\Loaders\ShaderLoader.cpp" />
     <ClCompile Include="src\Launcher\launcher.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
@@ -172,6 +175,7 @@
     <ClInclude Include="libs\imgui\imgui_impl_opengl3.h" />
     <ClInclude Include="libs\imgui\imgui_impl_opengl3_loader.h" />
     <ClInclude Include="libs\imgui\imgui_stdlib.h" />
+    <ClInclude Include="src\Engine\AssetStore\AssetStore.h" />
     <ClInclude Include="src\Engine\AssetStore\Models\Cube.h" />
     <ClInclude Include="src\Engine\AssetStore\Shapes\Triangle.h" />
     <ClInclude Include="src\Engine\Components\ComponentUI.h" />
@@ -646,10 +650,12 @@
     <ClInclude Include="src\Engine\Objects\Camera.h" />
     <ClInclude Include="src\Engine\Objects\Object.h" />
     <ClInclude Include="src\Engine\Systems\RenderSystem.h" />
+    <ClInclude Include="src\Engine\Utils\Loaders\OpenGLObjectsLoader.h" />
+    <ClInclude Include="src\Engine\Utils\Loaders\ShaderLoader.h" />
     <ClInclude Include="src\Launcher\launcher.h" />
     <ClInclude Include="src\ProjectManager.h" />
     <ClInclude Include="src\structs.h" />
-    <ClInclude Include="src\Utils\shader.h" />
+    <ClInclude Include="src\Engine\Utils\shader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="libs\glm\detail\func_common.inl" />
@@ -784,10 +790,10 @@
     <None Include="libs\glm\gtx\vector_angle.inl" />
     <None Include="libs\glm\gtx\vector_query.inl" />
     <None Include="libs\glm\gtx\wrap.inl" />
-    <None Include="src\Shaders\Basic\basic2D.frag" />
-    <None Include="src\Shaders\Basic\basic2D.vert" />
-    <None Include="src\Shaders\Basic\basic3D.frag" />
-    <None Include="src\Shaders\Basic\basic3D.vert" />
+    <None Include="src\Engine\Shaders\Basic\basic2D.frag" />
+    <None Include="src\Engine\Shaders\Basic\basic2D.vert" />
+    <None Include="src\Engine\Shaders\Basic\basic3D.frag" />
+    <None Include="src\Engine\Shaders\Basic\basic3D.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

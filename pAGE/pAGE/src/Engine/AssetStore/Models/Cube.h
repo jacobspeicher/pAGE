@@ -2,11 +2,10 @@
 
 #include <glew/glew.h>
 
-struct Cube {
-public:
-	unsigned int vao;
-	unsigned int vbo;
+#include "../../../structs.h"
 
+struct Cube : IOpenGLObject {
+public:
 	Cube() {
 		glGenVertexArrays(1, &vao);
 		glGenBuffers(1, &vbo);
@@ -21,11 +20,11 @@ public:
 		glEnableVertexAttribArray(0);
 
 		// interpret the vertex data for normals
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float));
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 		glEnableVertexAttribArray(1);
 
 		// interpret the vertex data for texture coords
-		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float));
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 		glEnableVertexAttribArray(2);
 	}
 

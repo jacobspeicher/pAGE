@@ -2,11 +2,10 @@
 
 #include <glew/glew.h>
 
-struct Triangle {
-public:
-	unsigned int vao;
-	unsigned int vbo;
+#include "../../../structs.h"
 
+struct Triangle : IOpenGLObject {
+public:
 	Triangle() {
 		glGenVertexArrays(1, &vao);
 		glGenBuffers(1, &vbo);

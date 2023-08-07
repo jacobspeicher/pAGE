@@ -1,16 +1,19 @@
 #pragma once
 
+#include <memory>
+
+#include "../Utils/shader.h"
+
 #include "../../structs.h"
-#include "../../Utils/shader.h"
 
 struct ModelComponent : IComponent {
 public:
 	unsigned int vao;
-	Shader* shader;
+	std::shared_ptr<Shader> shader;
 
-	ModelComponent(const unsigned int& vao, Shader& shader) {
+	ModelComponent(const unsigned int& vao, std::shared_ptr<Shader> shader) {
 		this->vao = vao;
-		this->shader = &shader;
+		this->shader = shader;
 		this->name = "Model Component";
 	}
 };

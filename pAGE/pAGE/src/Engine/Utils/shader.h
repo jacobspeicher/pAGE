@@ -25,7 +25,7 @@ public:
 
 		std::string path = std::filesystem::current_path().string();
 		std::replace(path.begin(), path.end(), '\\', '/');
-		path += "/src/Shaders/";
+		path += "/src/Engine/Shaders/";
 
 		char infoLog[512];
 		try {

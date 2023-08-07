@@ -17,14 +17,14 @@
 #include <fstream>
 #include <string>
 
-#include "AssetStore/Shapes/Triangle.h"
-//#include "AssetStore/Models/Cube.h"
-
+#include "AssetStore/AssetStore.h"
 #include "EventBus/EventBus.h"
 #include "Objects/Camera.h"
 #include "Objects/Object.h"
+#include "Utils/shader.h"
+#include "Utils/Loaders/OpenGLObjectsLoader.h"
+#include "Utils/Loaders/ShaderLoader.h"
 
-#include "../Utils/shader.h"
 #include "../structs.h"
 
 class Engine {
@@ -51,6 +51,8 @@ private:
 	int windowHeight;
 
 	/* Engine */
+	// hold all default engine assets (models, textures, shaders, etc)
+	AssetStore assetStore;
 	// define title of project and default path
 	Project project;
 	// event bus to handle emit/subscribe for events

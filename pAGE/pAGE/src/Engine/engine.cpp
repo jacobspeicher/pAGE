@@ -8,7 +8,7 @@
 #include "Components/ComponentUI.h"
 
 void ShowInspector(entt::registry& registry, std::vector<Object>& objects, const int& selected);
-void ShowSceneHierarchy(std::vector<Object> objects, int& selected);
+void ShowSceneHierarchy(entt::registry& registry, AssetStore& assetStore, std::vector<Object>& objects, int& selected);
 void ShowScene(ImTextureID texture);
 
 Engine::Engine() {
@@ -101,19 +101,8 @@ void Engine::Destroy() {
 }
 
 void Engine::Setup() {
-	Triangle triangleShape;
-
-	Shader basic2DShader("Basic/basic2D.vert", "Basic/basic2D.frag");
-	Shader basic3DShader("Basic/basic3D.vert", "Basic/basic3D.frag");
-
-	for (int i = 0; i < 1; ++i) {
-		auto triangle = registry.create();
-		Object object(triangle);
-		object.name = "triangle";
-		registry.emplace<TransformComponent>(triangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 90.0f * (i % 3)));
-		registry.emplace<ModelComponent>(triangle, triangleShape.vao, basic2DShader);
-		objects.push_back(object);
-	}
+	OpenGLObjectsLoader::LoadOpenGLObjects(assetStore);
+	ShaderLoader::LoadShaders(assetStore);
 
 	glGenFramebuffers(1, &fbo);
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
@@ -189,7 +178,7 @@ void Engine::Render() {
 
 	ImGui::ShowDemoWindow();
 
-	ShowSceneHierarchy(objects, selected);
+	ShowSceneHierarchy(registry, assetStore, objects, selected);
 	ShowInspector(registry, objects, selected);
 	ShowScene((ImTextureID)texColorBuffer);
 
@@ -227,14 +216,33 @@ void ShowInspector(entt::registry& registry, std::vector<Object>& objects, const
 	ImGui::End();
 }
 
-void ShowSceneHierarchy(std::vector<Object> objects, int& selected) {
+void ShowSceneHierarchy(entt::registry& registry, AssetStore& assetStore, std::vector<Object>& objects, int& selected) {
 	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoMove |
 		ImGuiWindowFlags_NoResize |
-		ImGuiWindowFlags_NoCollapse;
+		ImGuiWindowFlags_NoCollapse |
+		ImGuiWindowFlags_MenuBar;
 	ImGui::SetNextWindowPos(ImVec2(10, 10));
 	ImGui::SetNextWindowSize(ImVec2(332, 755));
 
 	ImGui::Begin("Scene Hierarchy", NULL, window_flags);
+
+	if (ImGui::BeginMenuBar()) {
+		if (ImGui::BeginMenu("Create 2D Object")) {
+			if (ImGui::MenuItem("Triangle")) {
+				auto triangle = registry.create();
+				Object object(triangle);
+				object.name = "Triangle (" + std::to_string((long)triangle) + ")";
+				registry.emplace<TransformComponent>(triangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(0.0f));
+				registry.emplace<ModelComponent>(triangle, assetStore.GetOpenGLObject("triangle")->vao, assetStore.GetShader("basic2D"));
+				objects.push_back(object);
+			}
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Create 3D Object")) {
+			ImGui::EndMenu();
+		}
+		ImGui::EndMenuBar();
+	}
 
 	int i = 0;
 	for (Object object : objects) {
