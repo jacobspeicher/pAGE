@@ -252,15 +252,19 @@ void Engine::ShowInspector() {
 		Object& object = objects[selected];
 		
 		std::string title = "Object : " + object.name;
-		ImGui::Text(title.c_str());
-		ImGui::Separator();
+		ImGui::SeparatorText(title.c_str());
+
 		ImGui::InputText("name", &object.name);
+		ImGui::Spacing();
 
 		if (registry.all_of<TransformComponent>(object.entity)) {
 			ComponentUI::PopulateTransformComponent(registry.get<TransformComponent>(object.entity));
 		}
 		if (registry.all_of<ModelComponent>(object.entity)) {
 			ComponentUI::PopulateModelComponent(registry.get<ModelComponent>(object.entity));
+		}
+		if (registry.all_of<ShapeComponent>(object.entity)) {
+			ComponentUI::PopulateShapeComponent(registry.get<ShapeComponent>(object.entity));
 		}
 	}
 

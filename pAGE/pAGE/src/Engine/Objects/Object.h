@@ -18,6 +18,7 @@ public:
 		spdlog::info("Object {0} created", (long)entity);
 	}
 	~Object() {
-		spdlog::info("Object destroyed");
+		// TODO : find out why this is called every frame lol
+		//spdlog::info("Object destroyed");
 	};
 };

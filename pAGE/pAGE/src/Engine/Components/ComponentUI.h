@@ -10,22 +10,22 @@
 
 namespace ComponentUI {
 	void PopulateTransformComponent(TransformComponent& transform) {
-		ImGui::Text(transform.name.c_str());
-		ImGui::Separator();
+		ImGui::SeparatorText(transform.name.c_str());
 		ImGui::DragFloat3("position", glm::value_ptr(transform.position), 0.1f);
 		ImGui::DragFloat3("scale", glm::value_ptr(transform.scale), 0.1f);
 		ImGui::DragFloat3("rotation", glm::value_ptr(transform.rotation), 0.1f, 0.0f, 360.0f);
+		ImGui::Spacing();
 	}
 
 	void PopulateModelComponent(ModelComponent& model) {
-		ImGui::Text(model.name.c_str());
-		ImGui::Separator();
+		ImGui::SeparatorText(model.name.c_str());
 		ImGui::Text("Nothing to see here");
+		ImGui::Spacing();
 	}
 
 	void PopulateShapeComponent(ShapeComponent& shape) {
-		ImGui::Text(shape.name.c_str());
-		ImGui::Separator();
+		ImGui::SeparatorText(shape.name.c_str());
 		ImGui::Text("Nothing to see here");
+		ImGui::Spacing();
 	}
 }
