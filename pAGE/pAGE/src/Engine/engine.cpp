@@ -14,9 +14,17 @@ Engine::Engine() {
 	windowWidth = 1920;
 	windowHeight = 1080;
 
+	/* Engine */
+	deltaTime = 0.0f;
+	lastFrame = 0.0f;
+
 	/* UI */
 	selected = -1;
 	mouseIsCaptured = false;
+	lastX = (float)windowWidth / 2.0f;
+	lastY = (float)windowHeight / 2.0f;
+	firstMouse = true;
+
 	spdlog::info("Engine created");
 }
 
@@ -140,6 +148,10 @@ void Engine::Run() {
 	while (isRunning) {
 		ProcessInput();
 		Render();
+
+		float currentFrame = (float)SDL_GetTicks64() * 0.001f;
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
 	}
 }
 
@@ -159,11 +171,42 @@ void Engine::ProcessInput() {
 				isRunning = false;
 			break;
 		case SDL_KEYUP:
-			if (sdlEvent.key.keysym.sym == SDLK_F12)
-				if (sdlEvent.key.keysym.mod & KMOD_SHIFT)
+			if (sdlEvent.key.keysym.sym == SDLK_F12) {
+				if (sdlEvent.key.keysym.mod & KMOD_SHIFT) {
 					mouseIsCaptured = !mouseIsCaptured;
+					SDL_SetRelativeMouseMode((SDL_bool)mouseIsCaptured);
+					if (!mouseIsCaptured) {
+						firstMouse = true;
+						SDL_WarpMouseInWindow(window, windowWidth / 2, windowHeight / 2);
+					}
+				}
+			}
+			break;
+		case SDL_MOUSEMOTION:
+			if (mouseIsCaptured)
+				CameraProcessMouse(sdlEvent.motion.xrel, sdlEvent.motion.yrel);
 		}
 	}
+	if (mouseIsCaptured)
+		CameraProcessKeyboard();
+}
+
+void Engine::CameraProcessMouse(Sint32 xposIn, Sint32 yposIn) {
+	float xPos = static_cast<float>(xposIn);
+	float yPos = static_cast<float>(yposIn);
+
+	camera.ProcessMouseMovement(xPos, -yPos);
+}
+
+void Engine::CameraProcessKeyboard() {
+	if (SDL_GetKeyboardState(NULL)[SDL_SCANCODE_W] == 1)
+		camera.ProcessKeyboard(CAMERA_MOVEMENT::FORWARD, deltaTime);
+	if (SDL_GetKeyboardState(NULL)[SDL_SCANCODE_S] == 1)
+		camera.ProcessKeyboard(CAMERA_MOVEMENT::BACKWARD, deltaTime);
+	if (SDL_GetKeyboardState(NULL)[SDL_SCANCODE_A] == 1)
+		camera.ProcessKeyboard(CAMERA_MOVEMENT::LEFT, deltaTime);
+	if (SDL_GetKeyboardState(NULL)[SDL_SCANCODE_D] == 1)
+		camera.ProcessKeyboard(CAMERA_MOVEMENT::RIGHT, deltaTime);
 }
 
 void Engine::Render() {
@@ -235,7 +278,7 @@ void Engine::ShowSceneHierarchy() {
 	ImGui::Begin("Scene Hierarchy", NULL, window_flags);
 
 	if (ImGui::BeginMenuBar()) {
-		if (ImGui::BeginMenu("Create 2D Object")) {
+		if (ImGui::BeginMenu("2D")) {
 			if (ImGui::MenuItem("Triangle")) {
 				auto triangle = registry.create();
 				Object object(triangle);
@@ -246,7 +289,7 @@ void Engine::ShowSceneHierarchy() {
 			}
 			ImGui::EndMenu();
 		}
-		if (ImGui::BeginMenu("Create 3D Object")) {
+		if (ImGui::BeginMenu("3D")) {
 			if (ImGui::MenuItem("Cube")) {
 				std::shared_ptr<Shader> shader = assetStore.GetShader("basic3D");
 
@@ -285,7 +328,7 @@ void Engine::ShowScene(ImTextureID texture) {
 		ImGuiWindowFlags_NoBringToFrontOnFocus;
 	ImGui::SetNextWindowPos(ImVec2(352, 10));
 	ImGui::SetNextWindowSize(ImVec2(1216, 755));
-	
+
 	ImGuiWindowFlags overlay_window_flags = ImGuiWindowFlags_NoDecoration |
 		ImGuiWindowFlags_NoSavedSettings |
 		ImGuiWindowFlags_AlwaysAutoResize |
@@ -319,6 +362,6 @@ void Engine::ShowScene(ImTextureID texture) {
 			spdlog::info("fire ray to find object to select");
 		}
 	}
-	
+
 	ImGui::End();
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <entt/entity/entity.hpp>
+#include <spdlog/spdlog.h>
 
 #include <string>
 #include <vector>
@@ -13,6 +14,10 @@ public:
 	entt::entity entity;
 	
 	Object() = default;
-	Object(entt::entity& entity) : entity(entity) {}
-	~Object() = default;
+	Object(entt::entity& entity) : entity(entity) {
+		spdlog::info("Object {0} created", (long)entity);
+	}
+	~Object() {
+		spdlog::info("Object destroyed");
+	};
 };

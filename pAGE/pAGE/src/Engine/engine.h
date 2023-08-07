@@ -41,6 +41,8 @@ public:
 	void Render();
 
 	/* UI */
+	void CameraProcessMouse(Sint32 xposIn, Sint32 yposIn);
+	void CameraProcessKeyboard();
 	void ShowInspector();
 	void ShowSceneHierarchy();
 	void ShowScene(ImTextureID texture);
@@ -69,6 +71,9 @@ private:
 	entt::registry registry;
 	// main camera for Scene
 	Camera camera;
+	// make sure rendering is done at consistent time steps
+	float deltaTime;
+	float lastFrame;
 
 	/* UI */
 	ImGuiIO* io;
@@ -82,5 +87,9 @@ private:
 	unsigned int texColorBuffer;
 	// whether the mouse is captured by the Scene window
 	bool mouseIsCaptured;
+	// keep track of mouse position so users aren't jarred when controlling viewport
+	float lastX;
+	float lastY;
+	bool firstMouse;
 };
 

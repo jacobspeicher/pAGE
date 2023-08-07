@@ -1,5 +1,7 @@
 #pragma once
 
+#include <spdlog/spdlog.h>
+
 #include <memory>
 #include <string>
 
@@ -17,7 +19,9 @@ public:
 		launcher = true;
 		spdlog::info("ProjectManager created");
 	}
-	~ProjectManager() = default;
+	~ProjectManager() {
+		spdlog::info("ProjectManager destroyed");
+	}
 
 	void Initialize() {
 		eventBus = std::make_shared<EventBus>();
