@@ -1,5 +1,7 @@
 #pragma once
 
+#include <glm/glm.hpp>
+
 #include <string>
 
 struct Project {
@@ -19,4 +21,10 @@ struct IOpenGLObject {
 public:
 	unsigned int vao;
 	unsigned int vbo;
+	std::vector<std::vector<glm::vec3>> triangles;
+
+	virtual std::vector<std::vector<glm::vec3>> GetTriangles() = 0;
+
+private:
+	virtual void LoadTriangles() = 0;
 };

@@ -7,6 +7,7 @@
 struct Cube : IOpenGLObject {
 public:
 	Cube() {
+		LoadTriangles();
 		glGenVertexArrays(1, &vao);
 		glGenBuffers(1, &vbo);
 
@@ -26,6 +27,11 @@ public:
 		// interpret the vertex data for texture coords
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 		glEnableVertexAttribArray(2);
+
+	}
+
+	virtual std::vector<std::vector<glm::vec3>> GetTriangles() override {
+		return triangles;
 	}
 
 private:
@@ -74,4 +80,8 @@ private:
 		-0.5f,	 0.5f,	 0.5f,   0.0f,    1.0f,   0.0f,	 0.0f,	 1.0f,	// top left
 		-0.5f,	 0.5f,	-0.5f,   0.0f,    1.0f,   0.0f,	 0.0f,	 0.0f,	// bottom left
 	};
+
+	virtual void LoadTriangles() override {
+
+	}
 };

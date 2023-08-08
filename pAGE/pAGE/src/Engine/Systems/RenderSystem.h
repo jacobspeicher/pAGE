@@ -33,6 +33,8 @@ void RenderSystem(entt::registry& registry, Camera& camera) {
 		glBindVertexArray(shapeComponent.vao);
 
 		shapeComponent.shader->Use();
+		shapeComponent.shader->SetMat4("projection", projection);
+		shapeComponent.shader->SetMat4("view", view);
 		shapeComponent.shader->SetMat4("model", model);
 		shapeComponent.shader->SetVec3("color", glm::vec3(1.0f, 1.0f, 1.0f));
 

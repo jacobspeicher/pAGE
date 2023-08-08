@@ -32,7 +32,8 @@ void main() {
 
     vec4 result = CalcDirLight(dirLight, norm, viewDir);
 
-    FragColor = result;
+    // FragColor = result;
+    FragColor = vec4(vec3(gl_FragCoord.z), 1.0);
 }
 
 vec4 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir) {

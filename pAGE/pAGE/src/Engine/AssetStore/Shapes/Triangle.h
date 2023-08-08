@@ -7,6 +7,7 @@
 struct Triangle : IOpenGLObject {
 public:
 	Triangle() {
+		LoadTriangles();
 		glGenVertexArrays(1, &vao);
 		glGenBuffers(1, &vbo);
 
@@ -25,6 +26,10 @@ public:
 		glEnableVertexAttribArray(1);
 	}
 
+	virtual std::vector<std::vector<glm::vec3>> GetTriangles() override {
+		return triangles;
+	}
+
 private:
 	float vertices[18] = {
 		// pos					color
@@ -32,4 +37,13 @@ private:
 		0.5f,	-0.5f,	0.0f,	0.0f,	1.0f,	0.0f, // top
 		0.0f,	0.5f,	0.0f,	0.0f,	0.0f,	1.0f, // right
 	};
+
+	virtual void LoadTriangles() override {
+		glm::vec3 vert1(vertices[0], vertices[1], vertices[2]);
+		glm::vec3 vert2(vertices[6], vertices[7], vertices[8]);
+		glm::vec3 vert3(vertices[12], vertices[13], vertices[14]);
+		std::vector<glm::vec3> triangle = { vert1, vert2, vert3 };
+
+		triangles.push_back(triangle);
+	}
 };
