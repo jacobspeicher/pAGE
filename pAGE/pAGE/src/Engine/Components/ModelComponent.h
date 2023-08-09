@@ -2,20 +2,16 @@
 
 #include <memory>
 
-#include "../Utils/shader.h"
+#include "structs.h"
 
-#include "../../structs.h"
-
-struct ModelComponent : IComponent {
+struct ModelComponent : IOpenGLComponent {
 public:
-	unsigned int vao;
-	std::shared_ptr<Shader> shader;
-	std::shared_ptr<Texture> texture;
-
-	ModelComponent(const unsigned int& vao, 
+	ModelComponent(const unsigned int& vao,
+		std::vector<std::vector<glm::vec3>> triangles,
 		std::shared_ptr<Shader> shader, 
 		std::shared_ptr<Texture> texture) {
 		this->vao = vao;
+		this->triangles = triangles;
 		this->shader = shader;
 		this->texture = texture;
 		this->name = "Model Component";

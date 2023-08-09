@@ -87,9 +87,5 @@ private:
 	unsigned int texColorBuffer;
 	// whether the mouse is captured by the Scene window
 	bool mouseIsCaptured;
-	// keep track of mouse position so users aren't jarred when controlling viewport
-	float lastX;
-	float lastY;
-	bool firstMouse;
 };
 

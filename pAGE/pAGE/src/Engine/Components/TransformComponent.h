@@ -2,7 +2,7 @@
 
 #include <glm/glm.hpp>
 
-#include "../../structs.h"
+#include "structs.h"
 
 struct TransformComponent : IComponent {
 	glm::vec3 position;

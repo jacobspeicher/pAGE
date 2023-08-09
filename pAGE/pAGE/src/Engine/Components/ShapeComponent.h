@@ -4,13 +4,10 @@
 
 #include "../Utils/shader.h"
 
-#include "../../structs.h"
+#include "structs.h"
 
-struct ShapeComponent : IComponent {
+struct ShapeComponent : IOpenGLComponent {
 public:
-	unsigned int vao;
-	std::shared_ptr<Shader> shader;
-
 	ShapeComponent(const unsigned int& vao, std::shared_ptr<Shader> shader) {
 		this->vao = vao;
 		this->shader = shader;

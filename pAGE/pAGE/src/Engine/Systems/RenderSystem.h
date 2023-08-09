@@ -16,7 +16,7 @@ void RenderSystem(entt::registry& registry, Camera& camera) {
 	glm::mat4 view = camera.GetViewMatrix();
 	glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), 1200.0f / 720.0f, 0.1f, 100.0f);
 
-	const auto shapeView = registry.view<TransformComponent, ShapeComponent>();
+	/*const auto shapeView = registry.view<TransformComponent, ShapeComponent>();
 	for (const entt::entity entity : shapeView) {
 		const auto& transform = shapeView.get<TransformComponent>(entity);
 		const auto& shapeComponent = shapeView.get<ShapeComponent>(entity);
@@ -39,7 +39,7 @@ void RenderSystem(entt::registry& registry, Camera& camera) {
 		shapeComponent.shader->SetVec3("color", glm::vec3(1.0f, 1.0f, 1.0f));
 
 		glDrawArrays(GL_TRIANGLES, 0, 3);
-	}
+	}*/
 
 	const auto modelView = registry.view<TransformComponent, ModelComponent>();
 	for (const entt::entity entity : modelView) {
@@ -76,6 +76,6 @@ void RenderSystem(entt::registry& registry, Camera& camera) {
 		modelComponent.shader->SetVec3("dirLight.diffuse", glm::vec3(0.5f));
 		modelComponent.shader->SetVec3("dirLight.specular", glm::vec3(0.1f));
 
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		glDrawArrays(GL_TRIANGLES, 0, modelComponent.triangles.size() * 3);
 	}
 }

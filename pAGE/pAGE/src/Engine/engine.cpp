@@ -5,10 +5,9 @@
 #include "Components/ShapeComponent.h"
 
 #include "Systems/RenderSystem.h"
+#include "Systems/SelectObjectSystem.h"
 
 #include "Components/ComponentUI.h"
-
-bool RayIntersectsTriangle(glm::vec3 origin, glm::vec3 direction, glm::mat4 model, std::vector<glm::vec3> triangle, glm::vec3& intersection);
 
 Engine::Engine() {
 	/* SDL */
@@ -23,9 +22,6 @@ Engine::Engine() {
 	/* UI */
 	selected = -1;
 	mouseIsCaptured = false;
-	lastX = (float)windowWidth / 2.0f;
-	lastY = (float)windowHeight / 2.0f;
-	firstMouse = true;
 
 	spdlog::info("Engine created");
 }
@@ -159,7 +155,6 @@ void Engine::Run() {
 
 void Engine::ProcessInput() {
 	SDL_Event sdlEvent;
-
 	// process every SDL_Event that SDL_PollEvent captures
 	while (SDL_PollEvent(&sdlEvent)) {
 		ImGui_ImplSDL2_ProcessEvent(&sdlEvent);
@@ -172,16 +167,11 @@ void Engine::ProcessInput() {
 			if (sdlEvent.key.keysym.sym == SDLK_ESCAPE)
 				isRunning = false;
 			break;
-		case SDL_KEYUP:
-			if (sdlEvent.key.keysym.sym == SDLK_F12) {
-				if (sdlEvent.key.keysym.mod & KMOD_SHIFT) {
-					mouseIsCaptured = !mouseIsCaptured;
-					SDL_SetRelativeMouseMode((SDL_bool)mouseIsCaptured);
-					if (!mouseIsCaptured) {
-						firstMouse = true;
-						SDL_WarpMouseInWindow(window, windowWidth / 2, windowHeight / 2);
-					}
-				}
+		case SDL_MOUSEBUTTONUP:
+			if (mouseIsCaptured && sdlEvent.button.button == 3) {
+				mouseIsCaptured = false;
+				SDL_SetRelativeMouseMode((SDL_bool)false);
+				SDL_WarpMouseInWindow(window, windowWidth / 2, windowHeight / 2);
 			}
 			break;
 		case SDL_MOUSEMOTION:
@@ -290,7 +280,12 @@ void Engine::ShowSceneHierarchy() {
 				Object object(triangle);
 				object.name = "Triangle (" + std::to_string((long)triangle) + ")";
 				registry.emplace<TransformComponent>(triangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(0.0f));
-				registry.emplace<ShapeComponent>(triangle, assetStore.GetOpenGLObject("triangle")->vao, assetStore.GetShader("basic2D"));
+				registry.emplace<ModelComponent>(triangle,
+					assetStore.GetOpenGLObject("triangle")->vao,
+					assetStore.GetOpenGLObject("triangle")->GetTriangles(),
+					assetStore.GetShader("basic2D"),
+					assetStore.GetTexture("container")
+				);
 				objects.push_back(object);
 			}
 			ImGui::EndMenu();
@@ -298,15 +293,16 @@ void Engine::ShowSceneHierarchy() {
 		if (ImGui::BeginMenu("3D")) {
 			if (ImGui::MenuItem("Cube")) {
 				std::shared_ptr<Shader> shader = assetStore.GetShader("basic3D");
-
 				auto cube = registry.create();
 				Object object(cube);
 				object.name = "Cube (" + std::to_string((long)cube) + ")";
 				registry.emplace<TransformComponent>(cube, glm::vec3(0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f));
-				registry.emplace<ModelComponent>(cube, 
-					assetStore.GetOpenGLObject("cube")->vao, 
+				registry.emplace<ModelComponent>(cube,
+					assetStore.GetOpenGLObject("cube")->vao,
+					assetStore.GetOpenGLObject("cube")->GetTriangles(),
 					assetStore.GetShader("basic3D"),
-					assetStore.GetTexture("container"));
+					assetStore.GetTexture("container")
+				);
 				objects.push_back(object);
 			}
 			ImGui::EndMenu();
@@ -339,7 +335,8 @@ void Engine::ShowScene(ImTextureID texture) {
 		ImGuiWindowFlags_NoSavedSettings |
 		ImGuiWindowFlags_AlwaysAutoResize |
 		ImGuiWindowFlags_NoNav |
-		ImGuiWindowFlags_NoMove;
+		ImGuiWindowFlags_NoMove |
+		ImGuiWindowFlags_NoMouseInputs;
 
 	ImGui::Begin("Scene", NULL, window_flags);
 
@@ -359,90 +356,25 @@ void Engine::ShowScene(ImTextureID texture) {
 	float regionMouseX = io->MousePos.x - windowPos.x - 8; // account for image window padding
 	float regionMouseY = io->MousePos.y - windowPos.y - 27; // account for image window padding
 
-	if (!mouseIsCaptured)
-		ImGui::Text("Press Shift+F12 to capture mouse");
-	else
-		ImGui::Text("Press Shift+F12 to release mouse");
-	ImGui::Text("x: %.2f, y: %.2f", regionMouseX, regionMouseY);
+	ImGui::Text("Camera Position\nx: %.2f, y: %.2f, z: %.2f", camera.Position.x, camera.Position.y, camera.Position.z);
+	ImGui::Text("Mouse Position\nx: %.2f, y: %.2f", regionMouseX, regionMouseY);
 
 	ImGui::End();
 
 	if (ImGui::IsItemHovered()) {
 		if (ImGui::IsMouseClicked(ImGuiMouseButton_Left, false)) {
-			glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), 1200.0f / 720.0f, 0.1f, 100.0f);
-			glm::vec3 ndc(
+			glm::vec2 ndc(
 				(2.0f * regionMouseX) / 1200.0f - 1.0f,
-				1.0f - (2.0f * regionMouseY) / 720.f,
-				1.0f
+				1.0f - (2.0f * regionMouseY) / 720.f
 			);
-			glm::vec4 viewport(0, 0, 1200.0f, 720.0f);
-			glm::vec3 mousePosInWorldSpace = glm::unProject(ndc, camera.GetViewMatrix(), projection, viewport);
-			glm::vec3 direction = mousePosInWorldSpace - camera.Position;
-			direction = glm::normalize(direction);
-			spdlog::info("fire ray to find object to select");
-			spdlog::info("mousePos: {0}, {1}, {2}", mousePosInWorldSpace.x, mousePosInWorldSpace.y, mousePosInWorldSpace.z);
-			spdlog::info("cameraPos: {0}, {1}, {2}", camera.Position.x, camera.Position.y, camera.Position.z);
-			spdlog::info("direction: {0}, {1}, {2}", direction.x, direction.y, direction.z);
-			for (Object obj : objects) {
-				const auto& transform = registry.get<TransformComponent>(obj.entity);
-				glm::vec3 rotation = glm::radians(transform.rotation);
-				glm::mat4 model(1.0f);
-				model = glm::translate(model, transform.position);
-				model = glm::rotate(model, rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
-				model = glm::rotate(model, rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
-				model = glm::rotate(model, rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
-				model = glm::scale(model, transform.scale);
-				for (std::vector<glm::vec3> triangle : assetStore.GetOpenGLObject("triangle")->GetTriangles()) {
-					glm::vec3 intersection;
-					bool intersects = RayIntersectsTriangle(camera.Position, camera.Front - camera.Position, model, triangle, intersection);
-					if (intersects) {
-						spdlog::info("intersects!");
-						selected = (long)obj.entity;
-					}
-					spdlog::info("intersection point: {0}, {0}, {0}", intersection.x, intersection.y, intersection.z);
-				}
-			}
+			SelectObjectSystem(registry, camera, ndc, selected);
+		}
+
+		if (ImGui::IsMouseDown(ImGuiMouseButton_Right)) {
+			mouseIsCaptured = true;
+			SDL_SetRelativeMouseMode((SDL_bool)true);
 		}
 	}
 
 	ImGui::End();
-}
-
-bool RayIntersectsTriangle(glm::vec3 origin, glm::vec3 direction, glm::mat4 model, std::vector<glm::vec3> triangle, glm::vec3& intersection) {
-	glm::vec3 vert0 = model * glm::vec4(triangle[0], 1.0f);
-	glm::vec3 vert1 = model * glm::vec4(triangle[1], 1.0f);
-	glm::vec3 vert2 = model * glm::vec4(triangle[2], 1.0f);
-	glm::vec3 edge1, edge2, h, s, q;
-	float a, f, u, v;
-	edge1 = vert1 - vert0;
-	edge2 = vert2 - vert0;
-	h = glm::cross(direction, edge2);
-	a = glm::dot(edge1, h);
-
-	// ray and triangle are parllel or degenerate
-	if (a > -glm::epsilon<float>() && a < glm::epsilon<float>())
-		return false;
-
-	f = 1.0f / a;
-	s = origin - vert0;
-	u = f * glm::dot(s, h);
-
-	if (u < 0.0f || u > 1.0f)
-		return false;
-
-	q = glm::cross(s, edge1);
-	v = f * glm::dot(direction, q);
-
-	if (v < 0.0f || u + v > 1.0f)
-		return false;
-
-	// compute t to find out where along the line it intersects
-	float t = f * glm::dot(edge2, q);
-
-	if (t > glm::epsilon<float>()) {
-		intersection = origin + direction * t;
-		return true;
-	}
-	
-	return false;
 }

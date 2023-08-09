@@ -184,6 +184,7 @@
     <ClInclude Include="src\Engine\Components\ComponentUI.h" />
     <ClInclude Include="src\Engine\Components\ModelComponent.h" />
     <ClInclude Include="src\Engine\Components\ShapeComponent.h" />
+    <ClInclude Include="src\Engine\Components\structs.h" />
     <ClInclude Include="src\Engine\Components\TransformComponent.h" />
     <ClInclude Include="src\Engine\engine.h" />
     <ClInclude Include="libs\entt\config\config.h" />
@@ -654,6 +655,7 @@
     <ClInclude Include="src\Engine\Objects\Camera.h" />
     <ClInclude Include="src\Engine\Objects\Object.h" />
     <ClInclude Include="src\Engine\Systems\RenderSystem.h" />
+    <ClInclude Include="src\Engine\Systems\SelectObjectSystem.h" />
     <ClInclude Include="src\Engine\Utils\Loaders\OpenGLObjectsLoader.h" />
     <ClInclude Include="src\Engine\Utils\Loaders\ShaderLoader.h" />
     <ClInclude Include="src\Engine\Utils\Loaders\TextureLoader.h" />
