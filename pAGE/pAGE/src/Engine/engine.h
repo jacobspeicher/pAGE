@@ -21,6 +21,7 @@
 #include "EventBus/EventBus.h"
 #include "Objects/Camera.h"
 #include "Objects/Object.h"
+#include "Objects/Model.h"
 #include "Utils/shader.h"
 #include "Utils/Loaders/OpenGLObjectsLoader.h"
 #include "Utils/Loaders/ShaderLoader.h"
@@ -87,5 +88,9 @@ private:
 	unsigned int texColorBuffer;
 	// whether the mouse is captured by the Scene window
 	bool mouseIsCaptured;
+
+	/* Model testing */
+	std::unique_ptr<Model> backpack;
+	std::unique_ptr<Model> snail;
 };
 

@@ -92,6 +92,14 @@ void Engine::Initialize(std::shared_ptr<EventBus>& eventBus, Project project) {
 	isRunning = true;
 
 	camera.Position = glm::vec3(0.0f, 0.0f, 3.0f);
+
+	/* Model testing */
+	std::string path = std::filesystem::current_path().string();
+	std::replace(path.begin(), path.end(), '\\', '/');
+	//path += "/src/Engine/AssetStore/Models/backpack/backpack.obj";
+	//backpack = std::make_unique<Model>(path.c_str());
+	path += "/src/Engine/AssetStore/Models/snail/garden snail.obj";
+	snail = std::make_unique<Model>(path.c_str());
 }
 
 void Engine::Destroy() {
@@ -208,6 +216,7 @@ void Engine::Render() {
 	glClearColor(.2f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	RenderSystem(registry, camera);
+	snail->Draw(*assetStore.GetShader("basic3D"));
 
 	glViewport(0, 0, windowWidth, windowHeight);
 	// render main UI
