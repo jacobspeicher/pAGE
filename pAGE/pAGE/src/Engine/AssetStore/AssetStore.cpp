@@ -13,7 +13,9 @@ AssetStore::~AssetStore() {
 
 void AssetStore::ClearAssets() {
 	openglObjects.clear();
+	models.clear();
 	shaders.clear();
+	textures.clear();
 }
 
 void AssetStore::AddOpenGLObject(const std::string& assetId, std::shared_ptr<IOpenGLObject> openglObject) {
@@ -22,7 +24,16 @@ void AssetStore::AddOpenGLObject(const std::string& assetId, std::shared_ptr<IOp
 }
 
 std::shared_ptr<IOpenGLObject> AssetStore::GetOpenGLObject(const std::string& assetId) const {
-	return openglObjects.at(assetId);
+	return GetAsset<IOpenGLObject>(assetId, openglObjects);
+}
+
+void AssetStore::AddModel(const std::string& assetId, std::shared_ptr<Model> model) {
+	models.emplace(assetId, model);
+	spdlog::info("Model {0} added to asset store", assetId);
+}
+
+std::shared_ptr<Model> AssetStore::GetModel(const std::string& assetId) const {
+	return GetAsset<Model>(assetId, models);
 }
 
 void AssetStore::AddShader(const std::string& assetId, std::shared_ptr<Shader> shader) {
@@ -31,7 +42,7 @@ void AssetStore::AddShader(const std::string& assetId, std::shared_ptr<Shader> s
 }
 
 std::shared_ptr<Shader> AssetStore::GetShader(const std::string& assetId) const {
-	return shaders.at(assetId);
+	return GetAsset<Shader>(assetId, shaders);
 }
 
 void AssetStore::AddTexture(const std::string& assetId, std::shared_ptr<Texture> texture) {
@@ -40,5 +51,5 @@ void AssetStore::AddTexture(const std::string& assetId, std::shared_ptr<Texture>
 }
 
 std::shared_ptr<Texture> AssetStore::GetTexture(const std::string& assetId) const {
-	return textures.at(assetId);
+	return GetAsset<Texture>(assetId, textures);
 }

@@ -13,7 +13,7 @@ namespace ComponentUI {
 		ImGui::SeparatorText(transform.name.c_str());
 		ImGui::DragFloat3("position", glm::value_ptr(transform.position), 0.1f);
 		ImGui::DragFloat3("scale", glm::value_ptr(transform.scale), 0.1f);
-		ImGui::DragFloat3("rotation", glm::value_ptr(transform.rotation), 0.1f, 0.0f, 360.0f);
+		ImGui::DragFloat3("rotation", glm::value_ptr(transform.rotation), 0.5f);
 		ImGui::Spacing();
 	}
 

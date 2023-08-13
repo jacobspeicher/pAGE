@@ -15,34 +15,41 @@
 
 class Model {
 public:
+	std::vector<Mesh> meshes;
+
 	Model(const char* path) {
 		LoadModel(path);
 	}
 
+	/*
 	void Draw(Shader& shader) {
 		for (unsigned int i = 0; i < meshes.size(); ++i) {
 			meshes[i].Draw(shader);
 		}
 	}
+	*/
 
 private:
 	// model data
-	std::vector<Mesh> meshes;
 	std::vector<AssimpTexture> texturesLoaded;
 	std::string directory;
 
 	void LoadModel(std::string path) {
 		Assimp::Importer importer;
+
+		std::string cwd = std::filesystem::current_path().string();
+		std::replace(cwd.begin(), cwd.end(), '\\', '/');
+		cwd += "/src/Engine/AssetStore/Models/" + path;
 		// aiProcess_Triangulate - transform all the models primitives to triangles first
 		// aiProcess_FlipUVs - flip the texture coordinates on the y-axis (OpenGL appreciates this)
-		const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+		const aiScene* scene = importer.ReadFile(cwd, aiProcess_Triangulate | aiProcess_FlipUVs);
 
 		if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
 			spdlog::error("{0}", importer.GetErrorString());
 			return;
 		}
 
-		directory = path.substr(0, path.find_last_of('/'));
+		directory = cwd.substr(0, cwd.find_last_of('/'));
 
 		ProcessNode(scene->mRootNode, scene);
 	}
@@ -62,6 +69,7 @@ private:
 	Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene) {
 		std::vector<Vertex> vertices;
 		std::vector<unsigned int> indices;
+		std::vector<std::vector<glm::vec3>> triangles;
 		std::vector<AssimpTexture> textures;
 		
 		for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {
@@ -93,9 +101,13 @@ private:
 		// process indices
 		for (unsigned int i = 0; i < mesh->mNumFaces; ++i) {
 			aiFace face = mesh->mFaces[i];
+			std::vector<glm::vec3> triangle;
 			for (unsigned int j = 0; j < face.mNumIndices; ++j) {
 				indices.push_back(face.mIndices[j]);
+				glm::vec3 vertex = vertices[face.mIndices[j]].Position;
+				triangle.push_back(vertex);
 			}
+			triangles.push_back(triangle);
 		}
 
 		// process material
@@ -109,7 +121,7 @@ private:
 
 		}
 
-		return Mesh(vertices, indices, textures);
+		return Mesh(vertices, indices, triangles, textures);
 	}
 
 	std::vector<AssimpTexture> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName) {

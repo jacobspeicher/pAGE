@@ -1,11 +1,10 @@
 #pragma once
 
-#include <memory>
-
 #include "structs.h"
 
-struct ModelComponent : IOpenGLComponent {
+struct ModelComponent : IModelComponent {
 public:
+	/*
 	ModelComponent(const unsigned int& vao,
 		std::vector<std::vector<glm::vec3>> triangles,
 		std::shared_ptr<Shader> shader, 
@@ -15,5 +14,10 @@ public:
 		this->shader = shader;
 		this->texture = texture;
 		this->name = "Model Component";
+	}*/
+	ModelComponent(std::shared_ptr<Model> model, std::shared_ptr<Shader> shader) {
+		this->model = model;
+		this->shader = shader;
+		this->name = "ModelComponent";
 	}
 };

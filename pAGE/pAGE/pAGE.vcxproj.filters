@@ -57,16 +57,19 @@
     <ClCompile Include="src\Engine\AssetStore\AssetStore.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Engine\Utils\Loaders\OpenGLObjectsLoader.cpp">
+    <ClCompile Include="src\Engine\Utils\Loaders\OpenGLObjectsLoader\OpenGLObjectsLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Engine\Utils\Loaders\ShaderLoader.cpp">
+    <ClCompile Include="src\Engine\Utils\Loaders\ShaderLoader\ShaderLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="libs\stb\stb_image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Engine\Utils\Loaders\TextureLoader.cpp">
+    <ClCompile Include="src\Engine\Utils\Loaders\TextureLoader\TextureLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Utils\Loaders\ModelLoader\ModelLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1532,10 +1535,10 @@
     <ClInclude Include="src\Engine\AssetStore\AssetStore.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\Utils\Loaders\OpenGLObjectsLoader.h">
+    <ClInclude Include="src\Engine\Utils\Loaders\OpenGLObjectsLoader\OpenGLObjectsLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\Utils\Loaders\ShaderLoader.h">
+    <ClInclude Include="src\Engine\Utils\Loaders\ShaderLoader\ShaderLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\Components\ShapeComponent.h">
@@ -1547,7 +1550,7 @@
     <ClInclude Include="libs\stb\stb_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\Utils\Loaders\TextureLoader.h">
+    <ClInclude Include="src\Engine\Utils\Loaders\TextureLoader\TextureLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\Systems\SelectObjectSystem.h">
@@ -1806,6 +1809,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="libs\assimp\ObjMaterial.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Utils\Loaders\ModelLoader\ModelLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

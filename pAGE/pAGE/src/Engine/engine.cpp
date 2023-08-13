@@ -92,14 +92,6 @@ void Engine::Initialize(std::shared_ptr<EventBus>& eventBus, Project project) {
 	isRunning = true;
 
 	camera.Position = glm::vec3(0.0f, 0.0f, 3.0f);
-
-	/* Model testing */
-	std::string path = std::filesystem::current_path().string();
-	std::replace(path.begin(), path.end(), '\\', '/');
-	//path += "/src/Engine/AssetStore/Models/backpack/backpack.obj";
-	//backpack = std::make_unique<Model>(path.c_str());
-	path += "/src/Engine/AssetStore/Models/snail/garden snail.obj";
-	snail = std::make_unique<Model>(path.c_str());
 }
 
 void Engine::Destroy() {
@@ -117,6 +109,7 @@ void Engine::Destroy() {
 
 void Engine::Setup() {
 	OpenGLObjectsLoader::LoadOpenGLObjects(assetStore);
+	ModelLoader::LoadModels(assetStore);
 	ShaderLoader::LoadShaders(assetStore);
 	TextureLoader::LoadTextures(assetStore);
 
@@ -216,7 +209,6 @@ void Engine::Render() {
 	glClearColor(.2f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	RenderSystem(registry, camera);
-	snail->Draw(*assetStore.GetShader("basic3D"));
 
 	glViewport(0, 0, windowWidth, windowHeight);
 	// render main UI
@@ -289,12 +281,14 @@ void Engine::ShowSceneHierarchy() {
 				Object object(triangle);
 				object.name = "Triangle (" + std::to_string((long)triangle) + ")";
 				registry.emplace<TransformComponent>(triangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(0.0f));
+				/*
 				registry.emplace<ModelComponent>(triangle,
 					assetStore.GetOpenGLObject("triangle")->vao,
 					assetStore.GetOpenGLObject("triangle")->GetTriangles(),
 					assetStore.GetShader("basic2D"),
 					assetStore.GetTexture("container")
 				);
+				*/
 				objects.push_back(object);
 			}
 			ImGui::EndMenu();
@@ -306,12 +300,23 @@ void Engine::ShowSceneHierarchy() {
 				Object object(cube);
 				object.name = "Cube (" + std::to_string((long)cube) + ")";
 				registry.emplace<TransformComponent>(cube, glm::vec3(0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f));
+				/*
 				registry.emplace<ModelComponent>(cube,
 					assetStore.GetOpenGLObject("cube")->vao,
 					assetStore.GetOpenGLObject("cube")->GetTriangles(),
 					assetStore.GetShader("basic3D"),
 					assetStore.GetTexture("container")
 				);
+				*/
+				objects.push_back(object);
+			}
+			if (ImGui::MenuItem("Backpack")) {
+				std::shared_ptr<Shader> shader = assetStore.GetShader("basic3D");
+				auto backpack = registry.create();
+				Object object(backpack);
+				object.name = "Backpack (" + std::to_string((long)backpack) + ")";
+				registry.emplace<TransformComponent>(backpack, glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f));
+				registry.emplace<ModelComponent>(backpack, assetStore.GetModel("backpack"), shader);
 				objects.push_back(object);
 			}
 			ImGui::EndMenu();

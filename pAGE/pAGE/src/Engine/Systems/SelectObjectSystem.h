@@ -34,14 +34,19 @@ void SelectObjectSystem(entt::registry& registry, Camera& camera, glm::vec2 ndcM
 		model = glm::rotate(model, rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
 		model = glm::scale(model, transform.scale);
 
-		for (std::vector<glm::vec3> triangle : modelComponent.triangles) {
-			float distance;
-			if (RayIntersectsTriangle(camera.Position, worldMouse, model, triangle, distance)) {
-				if (distance < minDistance) {
-					minDistance = distance;
-					selected = (long)entity;
+		for (Mesh mesh : modelComponent.model->meshes) {
+			for (std::vector<glm::vec3> triangle : mesh.triangles) {
+				float distance;
+				if (RayIntersectsTriangle(camera.Position, worldMouse, model, triangle, distance)) {
+					if (distance < minDistance) {
+						minDistance = distance;
+						selected = (long)entity;
+						break;
+					}
 				}
 			}
+			if (selected == (long)entity)
+				break;
 		}
 		// TODO : this is gonna have to get changed when object deletion is supported
 		if (selected != -1)

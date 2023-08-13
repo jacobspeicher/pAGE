@@ -25,17 +25,25 @@ struct AssimpTexture {
 class Mesh {
 public:
 	// mesh data
+	unsigned int vao;
+
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
+	std::vector<std::vector<glm::vec3>> triangles;
 	std::vector<AssimpTexture> textures;
 
-	Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<AssimpTexture> textures) {
+	Mesh(std::vector<Vertex> vertices, 
+		std::vector<unsigned int> indices, 
+		std::vector<std::vector<glm::vec3>> triangles, 
+		std::vector<AssimpTexture> textures) {
 		this->vertices = vertices;
 		this->indices = indices;
+		this->triangles = triangles;
 		this->textures = textures;
 
 		SetupMesh();
 	}
+	/*
 	void Draw(Shader& shader) {
 		unsigned int diffuseNr = 1;
 		unsigned int specularNr = 1;
@@ -63,9 +71,10 @@ public:
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 	}
+	*/
 
 private:
-	unsigned int vao, vbo, ebo;
+	unsigned int vbo, ebo;
 
 	void SetupMesh() {
 		glGenVertexArrays(1, &vao);

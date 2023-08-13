@@ -6,6 +6,7 @@
 #include <memory>
 #include <string>
 
+#include "../Objects/Model.h"
 #include "../Utils/shader.h"
 #include "../Utils/texture.h"
 
@@ -21,6 +22,9 @@ public:
 	void AddOpenGLObject(const std::string& assetId, std::shared_ptr<IOpenGLObject> openglObject);
 	std::shared_ptr<IOpenGLObject> GetOpenGLObject(const std::string& assetId) const;
 
+	void AddModel(const std::string& assetId, std::shared_ptr<Model> model);
+	std::shared_ptr<Model> GetModel(const std::string& assetId) const;
+
 	void AddShader(const std::string& assetId, std::shared_ptr<Shader> shader);
 	std::shared_ptr<Shader> GetShader(const std::string& assetId) const;
 
@@ -29,6 +33,16 @@ public:
 
 private:
 	std::map<std::string, std::shared_ptr<IOpenGLObject>> openglObjects;
+	std::map<std::string, std::shared_ptr<Model>> models;
 	std::map<std::string, std::shared_ptr<Shader>> shaders;
 	std::map<std::string, std::shared_ptr<Texture>> textures;
+
+	template <typename T>
+	std::shared_ptr<T> GetAsset(const std::string& assetId, const std::map<std::string, std::shared_ptr<T>>& map) const {
+		if (map.contains(assetId)) {
+			return map.at(assetId);
+		}
+
+		return NULL;
+	}
 };

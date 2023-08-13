@@ -162,9 +162,10 @@
     <ClCompile Include="libs\imgui\imgui_impl_sdlrenderer2.cpp" />
     <ClCompile Include="libs\imgui\imgui_tables.cpp" />
     <ClCompile Include="libs\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="src\Engine\Utils\Loaders\OpenGLObjectsLoader.cpp" />
-    <ClCompile Include="src\Engine\Utils\Loaders\ShaderLoader.cpp" />
-    <ClCompile Include="src\Engine\Utils\Loaders\TextureLoader.cpp" />
+    <ClCompile Include="src\Engine\Utils\Loaders\ModelLoader\ModelLoader.cpp" />
+    <ClCompile Include="src\Engine\Utils\Loaders\OpenGLObjectsLoader\OpenGLObjectsLoader.cpp" />
+    <ClCompile Include="src\Engine\Utils\Loaders\ShaderLoader\ShaderLoader.cpp" />
+    <ClCompile Include="src\Engine\Utils\Loaders\TextureLoader\TextureLoader.cpp" />
     <ClCompile Include="src\Launcher\launcher.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
@@ -740,9 +741,10 @@
     <ClInclude Include="src\Engine\Objects\Object.h" />
     <ClInclude Include="src\Engine\Systems\RenderSystem.h" />
     <ClInclude Include="src\Engine\Systems\SelectObjectSystem.h" />
-    <ClInclude Include="src\Engine\Utils\Loaders\OpenGLObjectsLoader.h" />
-    <ClInclude Include="src\Engine\Utils\Loaders\ShaderLoader.h" />
-    <ClInclude Include="src\Engine\Utils\Loaders\TextureLoader.h" />
+    <ClInclude Include="src\Engine\Utils\Loaders\ModelLoader\ModelLoader.h" />
+    <ClInclude Include="src\Engine\Utils\Loaders\OpenGLObjectsLoader\OpenGLObjectsLoader.h" />
+    <ClInclude Include="src\Engine\Utils\Loaders\ShaderLoader\ShaderLoader.h" />
+    <ClInclude Include="src\Engine\Utils\Loaders\TextureLoader\TextureLoader.h" />
     <ClInclude Include="src\Engine\Utils\texture.h" />
     <ClInclude Include="src\Launcher\launcher.h" />
     <ClInclude Include="src\ProjectManager.h" />
