@@ -31,8 +31,8 @@ void RenderSystem(entt::registry& registry, Camera& camera) {
 		model = glm::scale(model, transform.scale);
 
 		modelComponent.shader->Use();
-		modelComponent.shader->SetMat4("view", view);
 		modelComponent.shader->SetMat4("projection", projection);
+		modelComponent.shader->SetMat4("view", view);
 		modelComponent.shader->SetVec3("viewPos", camera.Position);
 		modelComponent.shader->SetMat4("model", model);
 
