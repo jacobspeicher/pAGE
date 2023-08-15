@@ -227,7 +227,7 @@ void Engine::Render() {
 	glViewport(0, 0, 1200, 720);
 	// render to framebuffer to create texture for scene viewport
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-	glClearColor(.2f, 0.0f, 0.0f, 1.0f);
+	glClearColor(.2f, .2f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	RenderSystem(registry, camera);
 	if (debug)
@@ -407,13 +407,13 @@ void Engine::ShowScene(ImTextureID texture) {
 				(2.0f * regionMouseX) / 1200.0f - 1.0f,
 				1.0f - (2.0f * regionMouseY) / 720.f
 			);
-			//SelectObjectSystem(registry, camera, ndc, selected);
+			// SelectObjectSystem(registry, camera, ndc, selected);
 			glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 			glReadBuffer(GL_COLOR_ATTACHMENT1);
 			unsigned char data[3];
 			glReadPixels(regionMouseX, 720 - regionMouseY, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, data);
-			spdlog::warn("{0}, {1}, {2}", data[0], data[1], data[2]);
-			selected = data[0];
+			if (data[1] == 0)
+				selected = data[0];
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		}
 

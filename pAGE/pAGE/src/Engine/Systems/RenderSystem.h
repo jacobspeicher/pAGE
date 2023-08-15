@@ -36,7 +36,7 @@ void RenderSystem(entt::registry& registry, Camera& camera) {
 		modelComponent.shader->SetVec3("viewPos", camera.Position);
 		modelComponent.shader->SetMat4("model", model);
 
-		modelComponent.shader->SetVec3("selColor", glm::vec3((long)entity / 255.0f));
+		modelComponent.shader->SetVec3("selColor", glm::vec3((long)entity / 255.0f, 0.0f, 0.0f));
 
 		modelComponent.shader->SetFloat("material.shininess", 256.0f);
 		modelComponent.shader->SetVec3("dirLight.direction", glm::vec3(-1.0f, -1.0f, 0.0f));
