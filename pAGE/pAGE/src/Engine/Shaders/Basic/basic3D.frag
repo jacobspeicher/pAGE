@@ -1,5 +1,8 @@
 #version 330 core
 
+layout (location = 0) out vec4 FragColor;
+layout (location = 1) out vec4 SelectionColor;
+
 struct Material {
     sampler2D texture_diffuse1;
     sampler2D texture_specular1;
@@ -13,6 +16,7 @@ struct DirLight {
     vec3 specular;
 };
 
+in vec3 SelColor;
 in vec2 TexCoords;
 in vec3 FragPos;
 in vec3 Normal;
@@ -20,8 +24,6 @@ in vec3 Normal;
 uniform vec3 viewPos;
 uniform Material material;
 uniform DirLight dirLight;
-
-out vec4 FragColor;
 
 vec4 CalcDirLight(DirLight light, vec3 Normal, vec3 viewDir);
 
@@ -33,6 +35,7 @@ void main() {
     vec4 result = CalcDirLight(dirLight, norm, viewDir);
 
     FragColor = result;
+    SelectionColor = vec4(SelColor, 1.0f);
 }
 
 vec4 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir) {

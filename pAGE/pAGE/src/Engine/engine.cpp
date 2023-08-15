@@ -5,6 +5,7 @@
 #include "Components/ShapeComponent.h"
 
 #include "Systems/RenderSystem.h"
+#include "Systems/RenderDebugBoxSystem.h"
 #include "Systems/SelectObjectSystem.h"
 
 #include "Components/ComponentUI.h"
@@ -22,6 +23,9 @@ Engine::Engine() {
 	/* UI */
 	selected = -1;
 	mouseIsCaptured = false;
+
+	/* Debug */
+	debug = false;
 
 	spdlog::info("Engine created");
 }
@@ -116,7 +120,7 @@ void Engine::Setup() {
 	glGenFramebuffers(1, &fbo);
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
-	// generate texture to use as color attachment for framebuffer
+	// generate texture to use as color attachment 0 for framebuffer
 	glGenTextures(1, &texColorBuffer);
 	glBindTexture(GL_TEXTURE_2D, texColorBuffer);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1200, 720, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
@@ -125,6 +129,19 @@ void Engine::Setup() {
 
 	// attach texture to currently bound framebuffer object
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texColorBuffer, 0);
+
+	// generate texture to use as color attachment 1 for framebuffer
+	glGenTextures(1, &selColorBuffer);
+	glBindTexture(GL_TEXTURE_2D, selColorBuffer);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1200, 720, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	// attach selection color texture to framebuffer
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, selColorBuffer, 0);
+
+	unsigned int attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+	glDrawBuffers(2, attachments);
 
 	// create depth and stencil attachments to renderbuffer objects (don't need to sample data from these buffers)
 	glGenRenderbuffers(1, &rbo);
@@ -168,6 +185,10 @@ void Engine::ProcessInput() {
 			if (sdlEvent.key.keysym.sym == SDLK_ESCAPE)
 				isRunning = false;
 			break;
+		case SDL_KEYUP:
+			if (sdlEvent.key.keysym.sym == SDLK_BACKQUOTE)
+				debug = !debug;
+			break;
 		case SDL_MOUSEBUTTONUP:
 			if (mouseIsCaptured && sdlEvent.button.button == 3) {
 				mouseIsCaptured = false;
@@ -209,6 +230,8 @@ void Engine::Render() {
 	glClearColor(.2f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	RenderSystem(registry, camera);
+	if (debug)
+		// RenderDebugBoxSystem(registry, camera, assetStore);
 
 	glViewport(0, 0, windowWidth, windowHeight);
 	// render main UI
@@ -224,7 +247,10 @@ void Engine::Render() {
 
 	ShowSceneHierarchy();
 	ShowInspector();
-	ShowScene((ImTextureID)texColorBuffer);
+	if (debug)
+		ShowScene((ImTextureID)selColorBuffer);
+	else
+		ShowScene((ImTextureID)texColorBuffer);
 
 	ImGui::Render(); 
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -381,7 +407,14 @@ void Engine::ShowScene(ImTextureID texture) {
 				(2.0f * regionMouseX) / 1200.0f - 1.0f,
 				1.0f - (2.0f * regionMouseY) / 720.f
 			);
-			SelectObjectSystem(registry, camera, ndc, selected);
+			//SelectObjectSystem(registry, camera, ndc, selected);
+			glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+			glReadBuffer(GL_COLOR_ATTACHMENT1);
+			unsigned char data[3];
+			glReadPixels(regionMouseX, 720 - regionMouseY, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, data);
+			spdlog::warn("{0}, {1}, {2}", data[0], data[1], data[2]);
+			selected = data[0];
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		}
 
 		if (ImGui::IsMouseDown(ImGuiMouseButton_Right)) {

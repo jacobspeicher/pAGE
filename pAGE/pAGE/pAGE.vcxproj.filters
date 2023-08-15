@@ -1814,6 +1814,9 @@
     <ClInclude Include="src\Engine\Utils\Loaders\ModelLoader\ModelLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Engine\Systems\RenderDebugBoxSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="libs\glm\detail\func_common.inl">
@@ -2240,5 +2243,8 @@
     <None Include="libs\assimp\vector3.inl">
       <Filter>Header Files</Filter>
     </None>
+    <None Include="src\Engine\Shaders\Basic\basicGeometry.frag" />
+    <None Include="src\Engine\Shaders\Basic\basicGeometry.shader" />
+    <None Include="src\Engine\Shaders\Basic\basicGeometry.vert" />
   </ItemGroup>
 </Project>

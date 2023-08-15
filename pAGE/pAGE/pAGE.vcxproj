@@ -739,6 +739,7 @@
     <ClInclude Include="src\Engine\Objects\Mesh.h" />
     <ClInclude Include="src\Engine\Objects\Model.h" />
     <ClInclude Include="src\Engine\Objects\Object.h" />
+    <ClInclude Include="src\Engine\Systems\RenderDebugBoxSystem.h" />
     <ClInclude Include="src\Engine\Systems\RenderSystem.h" />
     <ClInclude Include="src\Engine\Systems\SelectObjectSystem.h" />
     <ClInclude Include="src\Engine\Utils\Loaders\ModelLoader\ModelLoader.h" />
@@ -896,6 +897,9 @@
     <None Include="src\Engine\Shaders\Basic\basic2D.vert" />
     <None Include="src\Engine\Shaders\Basic\basic3D.frag" />
     <None Include="src\Engine\Shaders\Basic\basic3D.vert" />
+    <None Include="src\Engine\Shaders\Basic\basicGeometry.frag" />
+    <None Include="src\Engine\Shaders\Basic\basicGeometry.shader" />
+    <None Include="src\Engine\Shaders\Basic\basicGeometry.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -76,6 +76,8 @@ private:
 	// make sure rendering is done at consistent time steps
 	float deltaTime;
 	float lastFrame;
+	// color attachment, renders object index to determine object selection
+	unsigned int selColorBuffer;
 
 	/* UI */
 	ImGuiIO* io;
@@ -89,5 +91,8 @@ private:
 	unsigned int texColorBuffer;
 	// whether the mouse is captured by the Scene window
 	bool mouseIsCaptured;
+
+	/* Debug */
+	bool debug;
 };
 

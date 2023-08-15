@@ -5,4 +5,5 @@ in vec4 vertexColor;
 
 void main() {
 	FragColor = vertexColor;
+	FragColor.a *= 0.5f;
 }

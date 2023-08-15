@@ -15,22 +15,19 @@
 
 class Model {
 public:
+	unsigned int boxVao;
 	std::vector<Mesh> meshes;
+	AABB box;
+	std::vector<glm::vec3> boundingBoxVertices;
+	std::vector<unsigned int> boundingBoxIndices;
 
 	Model(const char* path) {
 		LoadModel(path);
 	}
 
-	/*
-	void Draw(Shader& shader) {
-		for (unsigned int i = 0; i < meshes.size(); ++i) {
-			meshes[i].Draw(shader);
-		}
-	}
-	*/
-
 private:
 	// model data
+	unsigned int boxVbo, boxEbo;
 	std::vector<AssimpTexture> texturesLoaded;
 	std::string directory;
 
@@ -52,6 +49,7 @@ private:
 		directory = cwd.substr(0, cwd.find_last_of('/'));
 
 		ProcessNode(scene->mRootNode, scene);
+		GenerateAABB();
 	}
 
 	void ProcessNode(aiNode* node, const aiScene* scene) {
@@ -121,7 +119,10 @@ private:
 
 		}
 
-		return Mesh(vertices, indices, triangles, textures);
+		Mesh outputMesh(vertices, indices, triangles, textures);
+		outputMesh.GenerateAABB();
+
+		return outputMesh;
 	}
 
 	std::vector<AssimpTexture> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName) {
@@ -193,5 +194,86 @@ private:
 		stbi_image_free(data);
 
 		return texture;
+	}
+
+	void GenerateAABB() {
+		box.min = glm::vec3(1000.0f);
+		box.max = glm::vec3(-1000.0f);
+
+		for (unsigned int i = 0; i < meshes.size(); ++i) {
+			const auto& mesh = meshes[i];
+
+			if (mesh.box.min.x < box.min.x) {
+				box.min.x = mesh.box.min.x;
+			}
+			if (mesh.box.max.x > box.max.x) {
+				box.max.x = mesh.box.max.x;
+			}
+
+			if (mesh.box.min.y < box.min.y) {
+				box.min.y = mesh.box.min.y;
+			}
+			if (mesh.box.max.y > box.max.y) {
+				box.max.y = mesh.box.max.y;
+			}
+
+			if (mesh.box.min.z < box.min.z) {
+				box.min.z = mesh.box.min.z;
+			}
+			if (mesh.box.max.z > box.max.z) {
+				box.max.z = mesh.box.max.z;
+			}
+		}
+
+		boundingBoxVertices.push_back(glm::vec3(box.min.x, box.min.y, box.min.z));
+		boundingBoxVertices.push_back(glm::vec3(box.min.x, box.max.y, box.min.z));
+		boundingBoxVertices.push_back(glm::vec3(box.max.x, box.max.y, box.min.z));
+		boundingBoxVertices.push_back(glm::vec3(box.max.x, box.min.y, box.min.z));
+
+		boundingBoxVertices.push_back(glm::vec3(box.min.x, box.min.y, box.max.z));
+		boundingBoxVertices.push_back(glm::vec3(box.min.x, box.max.y, box.max.z));
+		boundingBoxVertices.push_back(glm::vec3(box.max.x, box.max.y, box.max.z));
+		boundingBoxVertices.push_back(glm::vec3(box.max.x, box.min.y, box.max.z));
+
+		boundingBoxIndices = {
+			0, 1, 3, // back face
+			1, 2, 3,
+
+			5, 1, 6, // top face
+			1, 2, 6,
+
+			4, 5, 7, // front face
+			5, 6, 7,
+
+			4, 0, 7, // bottom face
+			0, 3, 7,
+
+			0, 1, 4, // left face
+			1, 5, 4,
+
+			7, 6, 3, // right face
+			6, 2, 3,
+		};
+
+		SetupBoundingBox();
+	}
+
+	void SetupBoundingBox() {
+		glGenVertexArrays(1, &boxVao);
+		glGenBuffers(1, &boxVbo);
+		glGenBuffers(1, &boxEbo);
+
+		glBindVertexArray(boxVao);
+
+		glBindBuffer(GL_ARRAY_BUFFER, boxVbo);
+		glBufferData(GL_ARRAY_BUFFER, boundingBoxVertices.size() * sizeof(glm::vec3), &boundingBoxVertices[0], GL_STATIC_DRAW);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, boxEbo);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, boundingBoxIndices.size() * sizeof(unsigned int), &boundingBoxIndices[0], GL_STATIC_DRAW);
+
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
+
+		glBindVertexArray(0);
 	}
 };
