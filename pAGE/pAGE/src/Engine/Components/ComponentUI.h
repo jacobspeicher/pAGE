@@ -28,4 +28,13 @@ namespace ComponentUI {
 		ImGui::Text("Nothing to see here");
 		ImGui::Spacing();
 	}
+
+	void PopulateDirectionalLightComponent(DirectionalLightComponent& directionalLight) {
+		ImGui::SeparatorText(directionalLight.name.c_str());
+		ImGui::DragFloat3("direction", glm::value_ptr(directionalLight.direction), 0.1f);
+		ImGui::ColorPicker3("ambient", glm::value_ptr(directionalLight.ambient));
+		ImGui::ColorPicker3("diffuse", glm::value_ptr(directionalLight.diffuse));
+		ImGui::ColorPicker3("specular", glm::value_ptr(directionalLight.specular));
+		ImGui::Spacing();
+	}
 }

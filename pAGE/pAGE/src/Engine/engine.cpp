@@ -3,6 +3,7 @@
 #include "Components/TransformComponent.h"
 #include "Components/ModelComponent.h"
 #include "Components/ShapeComponent.h"
+#include "Components/DirectionalLightComponent.h"
 
 #include "Systems/RenderSystem.h"
 #include "Systems/RenderDebugBoxSystem.h"
@@ -231,7 +232,7 @@ void Engine::Render() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	RenderSystem(registry, camera);
 	if (debug)
-		// RenderDebugBoxSystem(registry, camera, assetStore);
+		RenderDebugBoxSystem(registry, camera, assetStore);
 
 	glViewport(0, 0, windowWidth, windowHeight);
 	// render main UI
@@ -285,6 +286,9 @@ void Engine::ShowInspector() {
 		if (registry.all_of<ShapeComponent>(object.entity)) {
 			ComponentUI::PopulateShapeComponent(registry.get<ShapeComponent>(object.entity));
 		}
+		if (registry.all_of<DirectionalLightComponent>(object.entity)) {
+			ComponentUI::PopulateDirectionalLightComponent(registry.get<DirectionalLightComponent>(object.entity));
+		}
 	}
 
 	ImGui::End();
@@ -320,22 +324,45 @@ void Engine::ShowSceneHierarchy() {
 			ImGui::EndMenu();
 		}
 		if (ImGui::BeginMenu("3D")) {
+			ImGui::SeparatorText("Basic");
 			if (ImGui::MenuItem("Cube")) {
 				std::shared_ptr<Shader> shader = assetStore.GetShader("basic3D");
 				auto cube = registry.create();
 				Object object(cube);
 				object.name = "Cube (" + std::to_string((long)cube) + ")";
-				registry.emplace<TransformComponent>(cube, glm::vec3(0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f));
-				/*
-				registry.emplace<ModelComponent>(cube,
-					assetStore.GetOpenGLObject("cube")->vao,
-					assetStore.GetOpenGLObject("cube")->GetTriangles(),
-					assetStore.GetShader("basic3D"),
-					assetStore.GetTexture("container")
-				);
-				*/
+				registry.emplace<TransformComponent>(cube, glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f));
+				registry.emplace<ModelComponent>(cube, assetStore.GetModel("cube"), shader);
 				objects.push_back(object);
 			}
+			if (ImGui::MenuItem("Sphere")) {
+				std::shared_ptr<Shader> shader = assetStore.GetShader("basic3D");
+				auto sphere = registry.create();
+				Object object(sphere);
+				object.name = "Sphere (" + std::to_string((long)sphere) + ")";
+				registry.emplace<TransformComponent>(sphere, glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f));
+				registry.emplace<ModelComponent>(sphere, assetStore.GetModel("sphere"), shader);
+				objects.push_back(object);
+			}
+			if (ImGui::MenuItem("Cylinder")) {
+				std::shared_ptr<Shader> shader = assetStore.GetShader("basic3D");
+				auto cylinder = registry.create();
+				Object object(cylinder);
+				object.name = "Cylinder (" + std::to_string((long)cylinder) + ")";
+				registry.emplace<TransformComponent>(cylinder, glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f));
+				registry.emplace<ModelComponent>(cylinder, assetStore.GetModel("cylinder"), shader);
+				objects.push_back(object);
+			}
+			if (ImGui::MenuItem("Cone")) {
+				std::shared_ptr<Shader> shader = assetStore.GetShader("basic3D");
+				auto cone = registry.create();
+				Object object(cone);
+				object.name = "Cone (" + std::to_string((long)cone) + ")";
+				registry.emplace<TransformComponent>(cone, glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f));
+				registry.emplace<ModelComponent>(cone, assetStore.GetModel("cone"), shader);
+				objects.push_back(object);
+			}
+
+			ImGui::SeparatorText("Custom");
 			if (ImGui::MenuItem("Backpack")) {
 				std::shared_ptr<Shader> shader = assetStore.GetShader("basic3D");
 				auto backpack = registry.create();
@@ -343,6 +370,17 @@ void Engine::ShowSceneHierarchy() {
 				object.name = "Backpack (" + std::to_string((long)backpack) + ")";
 				registry.emplace<TransformComponent>(backpack, glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f));
 				registry.emplace<ModelComponent>(backpack, assetStore.GetModel("backpack"), shader);
+				objects.push_back(object);
+			}
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Lights")) {
+			if (ImGui::MenuItem("Directional")) {
+				auto directional = registry.create();
+				Object object(directional);
+				object.name = "Directional (" + std::to_string((long)directional) + ")";
+				registry.emplace<TransformComponent>(directional, glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f));
+				registry.emplace<DirectionalLightComponent>(directional, glm::vec3(0, 0, -1), glm::vec3(0.1f), glm::vec3(1.0f), glm::vec3(0.5f));
 				objects.push_back(object);
 			}
 			ImGui::EndMenu();

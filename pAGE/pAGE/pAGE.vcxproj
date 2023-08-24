@@ -265,6 +265,7 @@
     <ClInclude Include="src\Engine\AssetStore\Models\Cube.h" />
     <ClInclude Include="src\Engine\AssetStore\Shapes\Triangle.h" />
     <ClInclude Include="src\Engine\Components\ComponentUI.h" />
+    <ClInclude Include="src\Engine\Components\DirectionalLightComponent.h" />
     <ClInclude Include="src\Engine\Components\ModelComponent.h" />
     <ClInclude Include="src\Engine\Components\ShapeComponent.h" />
     <ClInclude Include="src\Engine\Components\structs.h" />

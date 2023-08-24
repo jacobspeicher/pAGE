@@ -15,9 +15,10 @@
 
 class Model {
 public:
-	unsigned int boxVao;
 	std::vector<Mesh> meshes;
+	std::vector<AssimpTexture> modelTextures;
 	AABB box;
+	unsigned int boxVao;
 	std::vector<glm::vec3> boundingBoxVertices;
 	std::vector<unsigned int> boundingBoxIndices;
 
@@ -28,7 +29,6 @@ public:
 private:
 	// model data
 	unsigned int boxVbo, boxEbo;
-	std::vector<AssimpTexture> texturesLoaded;
 	std::string directory;
 
 	void LoadModel(std::string path) {
@@ -116,7 +116,6 @@ private:
 
 			std::vector<AssimpTexture> specularMaps = LoadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
 			textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-
 		}
 
 		Mesh outputMesh(vertices, indices, triangles, textures);
@@ -132,9 +131,9 @@ private:
 			aiString str;
 			mat->GetTexture(type, i, &str);
 			bool skip = false;
-			for (unsigned int j = 0; j < texturesLoaded.size(); ++j) {
-				if (std::strcmp(texturesLoaded[j].path.data(), str.C_Str()) == 0) {
-					textures.push_back(texturesLoaded[j]);
+			for (unsigned int j = 0; j < modelTextures.size(); ++j) {
+				if (std::strcmp(modelTextures[j].path.data(), str.C_Str()) == 0) {
+					textures.push_back(modelTextures[j]);
 					skip = true;
 					break;
 				}
@@ -145,7 +144,7 @@ private:
 				texture.type = typeName;
 				texture.path = str.data;
 				textures.push_back(texture);
-				texturesLoaded.push_back(texture);
+				modelTextures.push_back(texture);
 			}
 		}
 
