@@ -18,6 +18,10 @@ struct IModelComponent : IComponent {
 	std::shared_ptr<Shader> shader;
 };
 
+struct ISpriteComponent : IComponent {
+	std::shared_ptr<Shader> shader;
+};
+
 struct IOpenGLComponent : IComponent {
 	unsigned int vao;
 	std::shared_ptr<Shader> shader;

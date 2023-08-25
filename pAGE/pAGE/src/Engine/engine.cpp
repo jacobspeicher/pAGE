@@ -96,7 +96,7 @@ void Engine::Initialize(std::shared_ptr<EventBus>& eventBus, Project project) {
 
 	isRunning = true;
 
-	camera.Position = glm::vec3(0.0f, 0.0f, 3.0f);
+	camera.Position = glm::vec3(0.0f, 10.0f, 10.0f);
 }
 
 void Engine::Destroy() {
@@ -228,7 +228,7 @@ void Engine::Render() {
 	glViewport(0, 0, 1200, 720);
 	// render to framebuffer to create texture for scene viewport
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-	glClearColor(.2f, .2f, 0.0f, 1.0f);
+	glClearColor(.2f, .2f, .2f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	RenderSystem(registry, camera);
 	if (debug)
