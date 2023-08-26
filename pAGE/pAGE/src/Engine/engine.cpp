@@ -389,6 +389,16 @@ void Engine::ShowSceneHierarchy() {
 		if (ImGui::Selectable(title.c_str(), selected == i)) {
 			selected = i;
 		}
+		if (ImGui::BeginPopupContextItem()) {
+			selected = i;
+			if (ImGui::Button("Delete")) {
+				registry.destroy(objects[i].entity);
+				objects.erase(objects.begin() + i);
+				selected = -1;
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::EndPopup();
+		}
 		++i;
 	}
 	
@@ -445,8 +455,14 @@ void Engine::ShowScene(ImTextureID texture) {
 			glReadBuffer(GL_COLOR_ATTACHMENT1);
 			unsigned char data[3];
 			glReadPixels(regionMouseX, 720 - regionMouseY, (GLint)1, (GLint)1, GL_RGB, GL_UNSIGNED_BYTE, data);
-			if (data[1] == 0)
-				selected = data[0];
+			if (data[1] == 0) {
+				for (int i = 0; i < objects.size(); ++i) {
+					if ((long)objects[i].entity == data[0]) {
+						selected = i;
+						break;
+					}
+				}
+			}
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		}
 
