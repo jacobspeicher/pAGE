@@ -268,6 +268,7 @@
     <ClInclude Include="src\Engine\Components\DirectionalLightComponent.h" />
     <ClInclude Include="src\Engine\Components\ModelComponent.h" />
     <ClInclude Include="src\Engine\Components\ShapeComponent.h" />
+    <ClInclude Include="src\Engine\Components\SpriteComponent.h" />
     <ClInclude Include="src\Engine\Components\structs.h" />
     <ClInclude Include="src\Engine\Components\TransformComponent.h" />
     <ClInclude Include="src\Engine\engine.h" />
@@ -740,6 +741,7 @@
     <ClInclude Include="src\Engine\Objects\Mesh.h" />
     <ClInclude Include="src\Engine\Objects\Model.h" />
     <ClInclude Include="src\Engine\Objects\Object.h" />
+    <ClInclude Include="src\Engine\Objects\Sprite.h" />
     <ClInclude Include="src\Engine\Systems\RenderDebugBoxSystem.h" />
     <ClInclude Include="src\Engine\Systems\RenderSystem.h" />
     <ClInclude Include="src\Engine\Systems\SelectObjectSystem.h" />

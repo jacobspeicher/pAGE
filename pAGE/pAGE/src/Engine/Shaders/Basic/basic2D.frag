@@ -1,9 +1,10 @@
 #version 330 core
 
+uniform sampler2D sprite;
+
 out vec4 FragColor;
-in vec4 vertexColor;
+in vec2 TexCoords;
 
 void main() {
-	FragColor = vertexColor;
-	FragColor.a *= 0.5f;
+	FragColor = vec4(texture(sprite, TexCoords));
 }

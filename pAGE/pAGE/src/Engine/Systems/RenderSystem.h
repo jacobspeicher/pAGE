@@ -8,15 +8,64 @@
 
 #include "../Components/TransformComponent.h"
 #include "../Components/ModelComponent.h"
-#include "../Components/ShapeComponent.h"
+#include "../Components/SpriteComponent.h"
 #include "../Components/DirectionalLightComponent.h"
 #include "../Objects/Camera.h"
+
+typedef std::unordered_map<std::string, glm::mat4> Matrices;
+
+void RenderSprites(entt::registry& registry, Camera& camera, Matrices& matrices);
+void RenderModels(entt::registry& registry, Camera& camera, Matrices& matrices);
 
 void RenderSystem(entt::registry& registry, Camera& camera) {
 	glm::mat4 model = glm::mat4(1.0f);
 	glm::mat4 view = camera.GetViewMatrix();
 	glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), 1200.0f / 720.0f, 0.1f, 100.0f);
+	
+	Matrices matrices;
+	matrices.emplace("model", model);
+	matrices.emplace("view", view);
+	matrices.emplace("projection", projection);
 
+	RenderSprites(registry, camera, matrices);
+	RenderModels(registry, camera, matrices);
+}
+
+void RenderSprites(entt::registry& registry, Camera& camera, Matrices& matrices) {
+	const auto spriteView = registry.view<TransformComponent, SpriteComponent>();
+	for (const entt::entity entity : spriteView) {
+		const auto& transform = spriteView.get<TransformComponent>(entity);
+		const auto& spriteComponent = spriteView.get<SpriteComponent>(entity);
+
+
+		matrices["model"] = glm::mat4(1.0f);
+		matrices["model"] = glm::translate(matrices["model"], transform.position);
+
+		glm::vec3 spriteToCamera = glm::normalize(camera.Position - transform.position);
+		glm::vec3 normalizedSpriteFront = glm::normalize(matrices["model"] * glm::vec4(0, 0, -1, 1));
+		float angleToCamera = glm::dot(spriteToCamera, normalizedSpriteFront);
+		glm::vec3 axisToCamera = glm::cross(camera.Position, normalizedSpriteFront);
+		matrices["model"] = glm::rotate(matrices["model"], angleToCamera, axisToCamera);
+
+		matrices["model"] = glm::scale(matrices["model"], transform.scale);
+
+		spriteComponent.shader->Use();
+		spriteComponent.shader->SetMat4("projection", matrices["projection"]);
+		spriteComponent.shader->SetMat4("view", matrices["view"]);
+		spriteComponent.shader->SetVec3("viewPos", camera.Position);
+		spriteComponent.shader->SetMat4("model", matrices["model"]);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, spriteComponent.texture->diffuse);
+		spriteComponent.shader->SetInt("sprite", 0);
+
+		glBindVertexArray(spriteComponent.sprite->vao);
+		glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
+	}
+}
+
+void RenderModels(entt::registry& registry, Camera& camera, Matrices& matrices) {
 	const auto directionalLightView = registry.view<DirectionalLightComponent>();
 	const auto modelView = registry.view<TransformComponent, ModelComponent>();
 	for (const entt::entity entity : modelView) {
@@ -25,18 +74,18 @@ void RenderSystem(entt::registry& registry, Camera& camera) {
 
 		glm::vec3 rotation = glm::radians(transform.rotation);
 
-		model = glm::mat4(1.0f);
-		model = glm::translate(model, transform.position);
-		model = glm::rotate(model, rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::rotate(model, rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
-		model = glm::scale(model, transform.scale);
+		matrices["model"] = glm::mat4(1.0f);
+		matrices["model"] = glm::translate(matrices["model"], transform.position);
+		matrices["model"] = glm::rotate(matrices["model"], rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
+		matrices["model"] = glm::rotate(matrices["model"], rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
+		matrices["model"] = glm::rotate(matrices["model"], rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
+		matrices["model"] = glm::scale(matrices["model"], transform.scale);
 
 		modelComponent.shader->Use();
-		modelComponent.shader->SetMat4("projection", projection);
-		modelComponent.shader->SetMat4("view", view);
+		modelComponent.shader->SetMat4("projection", matrices["projection"]);
+		modelComponent.shader->SetMat4("view", matrices["view"]);
 		modelComponent.shader->SetVec3("viewPos", camera.Position);
-		modelComponent.shader->SetMat4("model", model);
+		modelComponent.shader->SetMat4("model", matrices["model"]);
 
 		modelComponent.shader->SetVec3("selColor", glm::vec3((long)entity / 255.0f, 0.0f, 0.0f));
 

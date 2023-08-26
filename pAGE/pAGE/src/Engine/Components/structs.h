@@ -6,6 +6,8 @@
 #include <string>
 
 #include "../Objects/Model.h"
+#include "../Objects/Sprite.h"
+
 #include "../Utils/shader.h"
 #include "../Utils/texture.h"
 
@@ -19,6 +21,8 @@ struct IModelComponent : IComponent {
 };
 
 struct ISpriteComponent : IComponent {
+	std::shared_ptr<Sprite> sprite;
+	std::shared_ptr<Texture> texture;
 	std::shared_ptr<Shader> shader;
 };
 

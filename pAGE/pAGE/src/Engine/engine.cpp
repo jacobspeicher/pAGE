@@ -1,15 +1,16 @@
 #include "engine.h"
 
+#include "Objects/Sprite.h"
+
 #include "Components/TransformComponent.h"
 #include "Components/ModelComponent.h"
-#include "Components/ShapeComponent.h"
+#include "Components/SpriteComponent.h"
 #include "Components/DirectionalLightComponent.h"
+#include "Components/ComponentUI.h"
 
 #include "Systems/RenderSystem.h"
 #include "Systems/RenderDebugBoxSystem.h"
 #include "Systems/SelectObjectSystem.h"
-
-#include "Components/ComponentUI.h"
 
 Engine::Engine() {
 	/* SDL */
@@ -311,14 +312,6 @@ void Engine::ShowSceneHierarchy() {
 				Object object(triangle);
 				object.name = "Triangle (" + std::to_string((long)triangle) + ")";
 				registry.emplace<TransformComponent>(triangle, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(0.0f));
-				/*
-				registry.emplace<ModelComponent>(triangle,
-					assetStore.GetOpenGLObject("triangle")->vao,
-					assetStore.GetOpenGLObject("triangle")->GetTriangles(),
-					assetStore.GetShader("basic2D"),
-					assetStore.GetTexture("container")
-				);
-				*/
 				objects.push_back(object);
 			}
 			ImGui::EndMenu();
@@ -379,8 +372,10 @@ void Engine::ShowSceneHierarchy() {
 				auto directional = registry.create();
 				Object object(directional);
 				object.name = "Directional (" + std::to_string((long)directional) + ")";
+				std::shared_ptr<Sprite> sprite = std::make_shared<Sprite>();
 				registry.emplace<TransformComponent>(directional, glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f));
 				registry.emplace<DirectionalLightComponent>(directional, glm::vec3(0, 0, -1), glm::vec3(0.1f), glm::vec3(1.0f), glm::vec3(0.5f));
+				registry.emplace<SpriteComponent>(directional, sprite, assetStore.GetTexture("test"), assetStore.GetShader("basic2D"));
 				objects.push_back(object);
 			}
 			ImGui::EndMenu();
@@ -449,7 +444,7 @@ void Engine::ShowScene(ImTextureID texture) {
 			glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 			glReadBuffer(GL_COLOR_ATTACHMENT1);
 			unsigned char data[3];
-			glReadPixels(regionMouseX, 720 - regionMouseY, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, data);
+			glReadPixels(regionMouseX, 720 - regionMouseY, (GLint)1, (GLint)1, GL_RGB, GL_UNSIGNED_BYTE, data);
 			if (data[1] == 0)
 				selected = data[0];
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
