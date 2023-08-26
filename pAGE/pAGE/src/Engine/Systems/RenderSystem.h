@@ -42,10 +42,7 @@ void RenderSprites(entt::registry& registry, Camera& camera, Matrices& matrices)
 		matrices["model"] = glm::translate(matrices["model"], transform.position);
 
 		glm::vec3 spriteToCamera = glm::normalize(camera.Position - transform.position);
-		glm::vec3 normalizedSpriteFront = glm::normalize(matrices["model"] * glm::vec4(0, 0, -1, 1));
-		float angleToCamera = glm::dot(spriteToCamera, normalizedSpriteFront);
-		glm::vec3 axisToCamera = glm::cross(camera.Position, normalizedSpriteFront);
-		matrices["model"] = glm::rotate(matrices["model"], angleToCamera, axisToCamera);
+		matrices["model"] *= glm::inverse(glm::lookAt(transform.position, spriteToCamera, glm::vec3(0, 1, 0)));
 
 		matrices["model"] = glm::scale(matrices["model"], transform.scale);
 
@@ -54,6 +51,7 @@ void RenderSprites(entt::registry& registry, Camera& camera, Matrices& matrices)
 		spriteComponent.shader->SetMat4("view", matrices["view"]);
 		spriteComponent.shader->SetVec3("viewPos", camera.Position);
 		spriteComponent.shader->SetMat4("model", matrices["model"]);
+		spriteComponent.shader->SetVec3("selColor", glm::vec3((long)entity / 255.0f, 0.0f, 0.0f));
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, spriteComponent.texture->diffuse);

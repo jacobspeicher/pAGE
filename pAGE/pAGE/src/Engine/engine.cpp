@@ -375,7 +375,7 @@ void Engine::ShowSceneHierarchy() {
 				std::shared_ptr<Sprite> sprite = std::make_shared<Sprite>();
 				registry.emplace<TransformComponent>(directional, glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f));
 				registry.emplace<DirectionalLightComponent>(directional, glm::vec3(0, 0, -1), glm::vec3(0.1f), glm::vec3(1.0f), glm::vec3(0.5f));
-				registry.emplace<SpriteComponent>(directional, sprite, assetStore.GetTexture("test"), assetStore.GetShader("basic2D"));
+				registry.emplace<SpriteComponent>(directional, sprite, assetStore.GetTexture("directionalLight"), assetStore.GetShader("basic2D"));
 				objects.push_back(object);
 			}
 			ImGui::EndMenu();
