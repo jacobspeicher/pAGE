@@ -22,7 +22,6 @@
 #include "Objects/Camera.h"
 #include "Objects/Model.h"
 #include "Utils/Shader.h"
-#include "Utils/Loaders/OpenGLObjectsLoader/OpenGLObjectsLoader.h"
 #include "Utils/Loaders/ModelLoader/ModelLoader.h"
 #include "Utils/Loaders/ShaderLoader/ShaderLoader.h"
 #include "Utils/Loaders/TextureLoader/TextureLoader.h"

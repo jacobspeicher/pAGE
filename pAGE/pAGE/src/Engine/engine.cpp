@@ -117,7 +117,6 @@ void Engine::Destroy() {
 }
 
 void Engine::Setup() {
-	OpenGLObjectsLoader::LoadOpenGLObjects(assetStore);
 	ModelLoader::LoadModels(assetStore);
 	ShaderLoader::LoadShaders(assetStore);
 	TextureLoader::LoadTextures(assetStore);

@@ -57,9 +57,6 @@
     <ClCompile Include="src\Engine\AssetStore\AssetStore.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Engine\Utils\Loaders\OpenGLObjectsLoader\OpenGLObjectsLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Engine\Utils\Loaders\ShaderLoader\ShaderLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -1536,9 +1533,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\AssetStore\AssetStore.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Engine\Utils\Loaders\OpenGLObjectsLoader\OpenGLObjectsLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\Utils\Loaders\ShaderLoader\ShaderLoader.h">

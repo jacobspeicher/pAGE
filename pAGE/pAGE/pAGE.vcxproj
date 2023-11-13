@@ -165,7 +165,6 @@
     <ClCompile Include="libs\imgui\imgui_widgets.cpp" />
     <ClCompile Include="src\Engine\Utils\Globals\Globals.cpp" />
     <ClCompile Include="src\Engine\Utils\Loaders\ModelLoader\ModelLoader.cpp" />
-    <ClCompile Include="src\Engine\Utils\Loaders\OpenGLObjectsLoader\OpenGLObjectsLoader.cpp" />
     <ClCompile Include="src\Engine\Utils\Loaders\ShaderLoader\ShaderLoader.cpp" />
     <ClCompile Include="src\Engine\Utils\Loaders\TextureLoader\TextureLoader.cpp" />
     <ClCompile Include="src\Launcher\Launcher.cpp" />
@@ -753,7 +752,6 @@
     <ClInclude Include="src\Engine\Systems\SelectObjectSystem.h" />
     <ClInclude Include="src\Engine\Utils\Globals\Globals.h" />
     <ClInclude Include="src\Engine\Utils\Loaders\ModelLoader\ModelLoader.h" />
-    <ClInclude Include="src\Engine\Utils\Loaders\OpenGLObjectsLoader\OpenGLObjectsLoader.h" />
     <ClInclude Include="src\Engine\Utils\Loaders\ShaderLoader\ShaderLoader.h" />
     <ClInclude Include="src\Engine\Utils\Loaders\TextureLoader\TextureLoader.h" />
     <ClInclude Include="src\Engine\Utils\Texture.h" />
