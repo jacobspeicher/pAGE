@@ -18,6 +18,15 @@ void AssetStore::ClearAssets() {
 	textures.clear();
 }
 
+void AssetStore::AddOpenGLBinding(const std::string& assetId, std::shared_ptr<unsigned int> binding) {
+	openglBindings.emplace(assetId, binding);
+	spdlog::info("OpenGLBinding {0} added to asset store", assetId);
+}
+
+std::shared_ptr<unsigned int> AssetStore::GetOpenGLBinding(const std::string& assetId) {
+	return GetAsset<unsigned int>(assetId, openglBindings);
+}
+
 void AssetStore::AddOpenGLObject(const std::string& assetId, std::shared_ptr<IOpenGLObject> openglObject) {
 	openglObjects.emplace(assetId, openglObject);
 	spdlog::info("OpenGLObject {0} added to asset store", assetId);

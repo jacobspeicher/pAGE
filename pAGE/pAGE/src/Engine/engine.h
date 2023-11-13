@@ -76,23 +76,12 @@ private:
 	// make sure rendering is done at consistent time steps
 	float deltaTime;
 	float lastFrame;
-	// color attachment, renders object index to determine object selection
-	unsigned int selColorBuffer;
-
-	/* UI */
-	ImGuiIO* io;
-	// list of objects in scene, used to populate Scene Hierarchy
-	std::vector<Object> objects;
-	// keep track of which object is selected in Scene Hierarchy
-	int selected;
+	
 	// framebuffer and attachements, renders OpenGL to a texture to display in Scene window
 	unsigned int fbo;
 	unsigned int rbo;
 	unsigned int texColorBuffer;
-	// whether the mouse is captured by the Scene window
-	bool mouseIsCaptured;
-
-	/* Debug */
-	bool debug;
+	// color attachment, renders object index to determine object selection
+	unsigned int selColorBuffer;
 };
 

@@ -42,6 +42,7 @@ void RenderSprites(entt::registry& registry, Camera& camera, Matrices& matrices)
 		matrices["model"] = glm::translate(matrices["model"], transform.position);
 
 		glm::vec3 spriteToCamera = glm::normalize(camera.Position - transform.position);
+		// TODO : doesn't work when sprite is not in (0, 0, 0)
 		matrices["model"] *= glm::inverse(glm::lookAt(transform.position, spriteToCamera, glm::vec3(0, 1, 0)));
 
 		matrices["model"] = glm::scale(matrices["model"], transform.scale);

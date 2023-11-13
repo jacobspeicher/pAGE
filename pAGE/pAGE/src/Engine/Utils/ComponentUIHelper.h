@@ -4,11 +4,19 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "TransformComponent.h"
-#include "ModelComponent.h"
-#include "ShapeComponent.h"
+#include "../Components/ModelComponent.h"
+#include "../Components/ShapeComponent.h"
+#include "../Components/TransformComponent.h"
+#include "../Components/UIEntityNameComponent.h"
 
-namespace ComponentUI {
+namespace ComponentUIHelper {
+	void PopulateEntityNameComponent(UIEntityNameComponent& nameComponent, long entityId) {
+		std::string title = nameComponent.entityName + " (" + std::to_string(entityId) + ")";
+		ImGui::SeparatorText(title.c_str());
+		ImGui::InputText("name", &nameComponent.entityName);
+		ImGui::Spacing();
+	}
+
 	void PopulateTransformComponent(TransformComponent& transform) {
 		ImGui::SeparatorText(transform.name.c_str());
 		ImGui::DragFloat3("position", glm::value_ptr(transform.position), 0.1f);

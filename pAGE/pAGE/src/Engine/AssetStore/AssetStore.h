@@ -19,6 +19,9 @@ public:
 
 	void ClearAssets();
 
+	void AddOpenGLBinding(const std::string& assetId, std::shared_ptr<unsigned int> binding);
+	std::shared_ptr<unsigned int> GetOpenGLBinding(const std::string& assetId);
+
 	void AddOpenGLObject(const std::string& assetId, std::shared_ptr<IOpenGLObject> openglObject);
 	std::shared_ptr<IOpenGLObject> GetOpenGLObject(const std::string& assetId) const;
 
@@ -32,6 +35,7 @@ public:
 	std::shared_ptr<Texture> GetTexture(const std::string& assetId) const;
 
 private:
+	std::map<std::string, std::shared_ptr<unsigned int>> openglBindings;
 	std::map<std::string, std::shared_ptr<IOpenGLObject>> openglObjects;
 	std::map<std::string, std::shared_ptr<Model>> models;
 	std::map<std::string, std::shared_ptr<Shader>> shaders;
