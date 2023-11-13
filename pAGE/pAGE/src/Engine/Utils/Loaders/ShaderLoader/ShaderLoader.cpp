@@ -18,7 +18,7 @@ namespace ShaderLoader {
 			spdlog::error("Error loading shader script: {0}", errorMsg);
 		}
 
-		Globals::lua.script_file(path);
+		script.call();
 		sol::optional<sol::table> hasAssets = Globals::lua["assets"];
 		if (hasAssets == sol::nullopt) {
 			spdlog::warn("No shaders to load");
@@ -32,19 +32,10 @@ namespace ShaderLoader {
 			std::shared_ptr<Shader> shader = std::make_shared<Shader>(
 				shaderFiles["vert"],
 				shaderFiles["frag"],
-				shaderFiles["geo"].valid() ? shaderFiles["geo"] : std::string("")
+				shaderFiles["geo"].get_or(std::string(""))
 			);
 
 			assetStore.AddShader(shaderName, shader);
 		}
-
-		/*
-		std::shared_ptr<Shader> basicShader2D = std::make_shared<Shader>("Basic/Basic2D.vert", "Basic/Basic2D.frag");
-		std::shared_ptr<Shader> basicShader3D = std::make_shared<Shader>("Basic/Basic3D.vert", "Basic/Basic3D.frag");
-		std::shared_ptr<Shader> basicShaderGeometry = std::make_shared<Shader>("Basic/BasicGeometry.vert", "Basic/BasicGeometry.frag", "Basic/BasicGeometry.shader");
-
-		assetStore.AddShader("basic2D", basicShader2D);
-		assetStore.AddShader("basic3D", basicShader3D);
-		assetStore.AddShader("basicGeometry", basicShaderGeometry);*/
 	}
 }
