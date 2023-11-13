@@ -32,11 +32,11 @@ Engine::Engine() {
 	/* Debug */
 	Globals::debug = false;
 
-	spdlog::info("Engine created");
+	spdlog::info("{0} Created", outputPrefix);
 }
 
 Engine::~Engine() {
-	spdlog::info("Engine destroyed");
+	spdlog::info("{0} Destroyed", outputPrefix);
 }
 
 void Engine::Initialize(std::shared_ptr<EventBus>& eventBus, Project project) {
@@ -48,7 +48,7 @@ void Engine::Initialize(std::shared_ptr<EventBus>& eventBus, Project project) {
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-		spdlog::error("SDL could not be initialized");
+		spdlog::error("{0} SDL could not be initialized", outputPrefix);
 		return;
 	}
 
@@ -65,14 +65,14 @@ void Engine::Initialize(std::shared_ptr<EventBus>& eventBus, Project project) {
 		SDL_WINDOW_OPENGL
 	);
 	if (!window) {
-		spdlog::error("SDL Window could not be created");
+		spdlog::error("{0} SDL Window could not be created", outputPrefix);
 		return;
 	}
 
 	// create opengl context
 	context = SDL_GL_CreateContext(window);
 	if (context == NULL) {
-		spdlog::error("OpenGL context could not be created");
+		spdlog::error("{0} OpenGL context could not be created", outputPrefix);
 		return;
 	}
 	SDL_GL_MakeCurrent(window, context);
@@ -81,7 +81,7 @@ void Engine::Initialize(std::shared_ptr<EventBus>& eventBus, Project project) {
 	glewExperimental = GL_TRUE;
 	GLenum glewError = glewInit();
 	if (glewError != GLEW_OK) {
-		spdlog::error("GLEW could not be initialized");
+		spdlog::error("{0} GLEW could not be initialized", outputPrefix);
 		return;
 	}
 
@@ -113,7 +113,7 @@ void Engine::Destroy() {
 	SDL_DestroyWindow(window);
 	SDL_Quit();
 
-	spdlog::info("Engine cleaned up");
+	spdlog::info("{0} Cleaned up", outputPrefix);
 }
 
 void Engine::Setup() {
@@ -160,7 +160,7 @@ void Engine::Setup() {
 
 	// check if framebuffer is complete
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-		spdlog::error("Framebuffer is not complete\n{0}", glCheckFramebufferStatus(GL_FRAMEBUFFER));
+		spdlog::error("{0} Framebuffer is not complete\n{1}", outputPrefix, glCheckFramebufferStatus(GL_FRAMEBUFFER));
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 

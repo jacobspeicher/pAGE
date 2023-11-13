@@ -27,6 +27,9 @@ public:
 	}
 
 private:
+	/* debug message prefix */
+	const std::string outputPrefix = "MODEL :";
+
 	// model data
 	unsigned int boxVbo, boxEbo;
 	std::string directory;
@@ -42,7 +45,7 @@ private:
 		const aiScene* scene = importer.ReadFile(cwd, aiProcess_Triangulate | aiProcess_FlipUVs);
 
 		if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
-			spdlog::error("{0}", importer.GetErrorString());
+			spdlog::error("{0} {1}", outputPrefix, importer.GetErrorString());
 			return;
 		}
 
@@ -169,7 +172,6 @@ private:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 		std::string texturePath = directory + "/" + std::string(filename);
-		spdlog::info("{0}", filename);
 
 		data = stbi_load(texturePath.c_str(), &width, &height, &numChannels, 0);
 		if (data) {
@@ -182,12 +184,12 @@ private:
 			);
 			GLenum error = glGetError();
 			if (error != GL_NO_ERROR) {
-				spdlog::error("{0}", error);
+				spdlog::error("{0} {1}", outputPrefix, error);
 			}
 			glGenerateMipmap(GL_TEXTURE_2D);
 		}
 		else {
-			spdlog::error("Issue loading texture ({0})", filename);
+			spdlog::error("{0} Issue loading texture ({1})", outputPrefix, filename);
 		}
 
 		stbi_image_free(data);

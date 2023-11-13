@@ -15,14 +15,14 @@ namespace TextureLoader {
 		if (!script.valid()) {
 			sol::error err = script;
 			std::string errorMsg = err.what();
-			spdlog::error("Error loading texture script: {0}", errorMsg);
+			spdlog::error("TEXTURE LOADER : Error loading texture script: {0}", errorMsg);
 			return;
 		}
 
 		script.call();
 		sol::optional<sol::table> hasAssets = Globals::lua["assets"];
 		if (hasAssets == sol::nullopt) {
-			spdlog::warn("No textures to load");
+			spdlog::warn("TEXTURE LOADER : No textures to load");
 			return;
 		}
 		sol::table assets = hasAssets.value();

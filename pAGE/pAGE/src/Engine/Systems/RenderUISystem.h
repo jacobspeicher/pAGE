@@ -136,7 +136,8 @@ void ShowSceneHierarchy(entt::registry& registry, AssetStore& assetStore) {
 
 void RenderSceneHierarchyList(entt::registry& registry) {
 	const auto entityView = registry.view<UIEntityNameComponent>();
-	for (const entt::entity entity : entityView) {
+	for (int i = entityView.size() - 1; i >= 0; i--) {
+		const auto& entity = entityView[i];
 		const auto& nameComponent = entityView.get<UIEntityNameComponent>(entity);
 		std::string title = std::to_string((long)entity) + " : " + nameComponent.entityName;
 		if (ImGui::Selectable(title.c_str(), Globals::selected == (long)entity)) {
@@ -152,6 +153,22 @@ void RenderSceneHierarchyList(entt::registry& registry) {
 			ImGui::EndPopup();
 		}
 	}
+	/*for (const entt::entity entity : entityView) {
+		const auto& nameComponent = entityView.get<UIEntityNameComponent>(entity);
+		std::string title = std::to_string((long)entity) + " : " + nameComponent.entityName;
+		if (ImGui::Selectable(title.c_str(), Globals::selected == (long)entity)) {
+			Globals::selected = (long)entity;
+		}
+		if (ImGui::BeginPopupContextItem()) {
+			Globals::selected = (long)entity;
+			if (ImGui::Button("Delete")) {
+				registry.destroy(entity);
+				Globals::selected = -1;
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::EndPopup();
+		}
+	}*/
 }
 
 void ShowScene(entt::registry& registry, AssetStore& assetStore, Camera& camera) {
@@ -260,9 +277,6 @@ void ShowInspector(entt::registry& registry) {
 		}
 		if (registry.all_of<ModelComponent>(entity)) {
 			ComponentUIHelper::PopulateModelComponent(registry.get<ModelComponent>(entity));
-		}
-		if (registry.all_of<ShapeComponent>(entity)) {
-			ComponentUIHelper::PopulateShapeComponent(registry.get<ShapeComponent>(entity));
 		}
 		if (registry.all_of<DirectionalLightComponent>(entity)) {
 			ComponentUIHelper::PopulateDirectionalLightComponent(registry.get<DirectionalLightComponent>(entity));

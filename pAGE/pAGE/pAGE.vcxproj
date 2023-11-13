@@ -271,7 +271,6 @@
     <ClInclude Include="src\Engine\Utils\ComponentUIHelper.h" />
     <ClInclude Include="src\Engine\Components\DirectionalLightComponent.h" />
     <ClInclude Include="src\Engine\Components\ModelComponent.h" />
-    <ClInclude Include="src\Engine\Components\ShapeComponent.h" />
     <ClInclude Include="src\Engine\Components\SpriteComponent.h" />
     <ClInclude Include="src\Engine\Components\Structs.h" />
     <ClInclude Include="src\Engine\Components\TransformComponent.h" />

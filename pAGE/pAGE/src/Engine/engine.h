@@ -48,6 +48,9 @@ public:
 	void ShowScene(ImTextureID texture);
 
 private:
+	/* debug message prefix */
+	const std::string outputPrefix = "ENGINE :";
+
 	/* SDL */
 	SDL_Window* window;
 	// OpenGL context for SDL window

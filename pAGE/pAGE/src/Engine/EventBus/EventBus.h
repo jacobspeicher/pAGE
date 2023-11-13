@@ -46,14 +46,15 @@ typedef std::list<std::unique_ptr<IEventCallback>> HandlerList;
 
 class EventBus {
 private:
+	const std::string outputPrefix = "EVENT BUS :";
 	std::map<std::type_index, std::unique_ptr<HandlerList>> subscribers;
 
 public:
 	EventBus() {
-		spdlog::info("EventBus created");
+		spdlog::info("{0} Created", outputPrefix);
 	}
 	~EventBus() {
-		spdlog::info("EventBus destroyed");
+		spdlog::info("{0} Destroyed", outputPrefix);
 	}
 
 	// clears the subscriber list

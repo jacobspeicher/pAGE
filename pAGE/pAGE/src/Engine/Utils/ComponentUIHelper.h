@@ -5,7 +5,6 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "../Components/ModelComponent.h"
-#include "../Components/ShapeComponent.h"
 #include "../Components/TransformComponent.h"
 #include "../Components/UIEntityNameComponent.h"
 
@@ -27,12 +26,6 @@ namespace ComponentUIHelper {
 
 	void PopulateModelComponent(ModelComponent& model) {
 		ImGui::SeparatorText(model.name.c_str());
-		ImGui::Text("Nothing to see here");
-		ImGui::Spacing();
-	}
-
-	void PopulateShapeComponent(ShapeComponent& shape) {
-		ImGui::SeparatorText(shape.name.c_str());
 		ImGui::Text("Nothing to see here");
 		ImGui::Spacing();
 	}

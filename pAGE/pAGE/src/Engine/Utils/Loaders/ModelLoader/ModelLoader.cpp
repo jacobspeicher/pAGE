@@ -15,14 +15,14 @@ namespace ModelLoader {
 		if (!script.valid()) {
 			sol::error err = script;
 			std::string errorMsg = err.what();
-			spdlog::error("Error loading model script: {0}", errorMsg);
+			spdlog::error("MODEL LOADER : Error loading model script: {0}", errorMsg);
 			return;
 		}
 		
 		script.call();
 		sol::optional<sol::table> hasAssets = Globals::lua["assets"];
 		if (hasAssets == sol::nullopt) {
-			spdlog::warn("No textures to load");
+			spdlog::warn("MODEL LOADER : No models to load");
 			return;
 		}
 		sol::table assets = hasAssets.value();

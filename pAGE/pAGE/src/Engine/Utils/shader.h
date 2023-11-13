@@ -83,7 +83,7 @@ public:
 		}
 		catch (std::ifstream::failure e) {
 			strerror_s(infoLog, 512, errno);
-			spdlog::error("Shader file not successfully read\n{0}", infoLog);
+			spdlog::error("{0} Shader file not successfully read\n{1}", outputPrefix, infoLog);
 			return "";
 		}
 
@@ -111,7 +111,7 @@ public:
 		glGetShaderiv(binding, GL_COMPILE_STATUS, &success);
 		if (!success) {
 			glGetShaderInfoLog(binding, 512, NULL, infoLog);
-			spdlog::error("Shader compilation failed\n{0}", infoLog);
+			spdlog::error("{0} Shader compilation failed\n{1}", outputPrefix, infoLog);
 		}
 	}
 
@@ -127,7 +127,7 @@ public:
 		glGetProgramiv(program, GL_LINK_STATUS, &success);
 		if (!success) {
 			glGetProgramInfoLog(program, 512, NULL, infoLog);
-			spdlog::error("Program linking failed\n{0}", infoLog);
+			spdlog::error("{0} Program linking failed\n{1}", outputPrefix, infoLog);
 		}
 
 		glDeleteShader(vertex);
@@ -147,7 +147,7 @@ public:
 		glGetProgramiv(program, GL_LINK_STATUS, &success);
 		if (!success) {
 			glGetProgramInfoLog(program, 512, NULL, infoLog);
-			spdlog::error("Program linking failed\n{0}", infoLog);
+			spdlog::error("{0} Program linking failed\n{1}", outputPrefix, infoLog);
 		}
 
 		glDeleteShader(vertex);
@@ -182,4 +182,8 @@ public:
 	void SetMat4(const std::string& name, glm::mat4 value) const {
 		glUniformMatrix4fv(glGetUniformLocation(id, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 	}
+
+private:
+	/* debug message prefix */
+	const std::string outputPrefix = "SHADER :";
 };

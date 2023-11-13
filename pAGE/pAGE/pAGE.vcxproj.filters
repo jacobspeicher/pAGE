@@ -1538,9 +1538,6 @@
     <ClInclude Include="src\Engine\Utils\Loaders\ShaderLoader\ShaderLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\Components\ShapeComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Engine\Utils\Texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>

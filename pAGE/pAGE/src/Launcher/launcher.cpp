@@ -4,16 +4,16 @@ Launcher::Launcher() {
 	isRunning = false;
 	windowWidth = 800;
 	windowHeight = 600;
-	spdlog::info("Launcher created");
+	spdlog::info("{0} Created", outputPrefix);
 }
 
 Launcher::~Launcher() {
-	spdlog::info("Launcher destroyed");
+	spdlog::info("{0} Destroyed", outputPrefix);
 }
 
 void Launcher::Initialize(std::shared_ptr<EventBus>& eventBus) {
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-		spdlog::error("SDL could not be initialized");
+		spdlog::error("{0} SDL could not be initialized", outputPrefix);
 		return;
 	}
 
@@ -27,7 +27,7 @@ void Launcher::Initialize(std::shared_ptr<EventBus>& eventBus) {
 		SDL_WINDOW_SHOWN
 	);
 	if (!window) {
-		spdlog::error("SDL Window could not be created");
+		spdlog::error("{0} SDL Window could not be created", outputPrefix);
 		return;
 	}
 
@@ -35,7 +35,7 @@ void Launcher::Initialize(std::shared_ptr<EventBus>& eventBus) {
 	// -1 in arg[1] tells renderer to use the first available rendering driver
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	if (!renderer) {
-		spdlog::error("SDL Renderer could not be created");
+		spdlog::error("{0} SDL Renderer could not be created", outputPrefix);
 		return;
 	}
 
@@ -80,7 +80,7 @@ void Launcher::Destroy() {
 	SDL_DestroyWindow(window);
 	SDL_Quit();
 
-	spdlog::info("Launcher cleaned up");
+	spdlog::info("{0} Cleaned up", outputPrefix);
 }
 
 void Launcher::Setup() {
@@ -210,7 +210,7 @@ void Launcher::ShowActionsWindow() {
 				}
 			}
 			else {
-				spdlog::error("Could not create project");
+				spdlog::error("{0} Could not create project", outputPrefix);
 			}
 
 			strcpy_s(name, "");

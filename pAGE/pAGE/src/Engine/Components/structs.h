@@ -25,10 +25,3 @@ struct ISpriteComponent : IComponent {
 	std::shared_ptr<Texture> texture;
 	std::shared_ptr<Shader> shader;
 };
-
-struct IOpenGLComponent : IComponent {
-	unsigned int vao;
-	std::shared_ptr<Shader> shader;
-	std::shared_ptr<Texture> texture;
-	std::vector<std::vector<glm::vec3>> triangles;
-};

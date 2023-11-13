@@ -30,6 +30,9 @@ public:
 	void Render();
 
 private:
+	/* debug message prefix */
+	const std::string outputPrefix = "LAUNCHER :";
+
 	void ShowActionsWindow();
 	void ShowProjectsWindow();
 
