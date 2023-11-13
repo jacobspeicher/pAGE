@@ -1841,6 +1841,12 @@
     <ClInclude Include="src\Engine\Utils\Globals\Globals.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="libs\sol\forward.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\sol\config.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="libs\glm\detail\func_common.inl">

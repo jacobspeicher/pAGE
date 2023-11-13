@@ -263,6 +263,8 @@
     <ClInclude Include="libs\imgui\imgui_impl_opengl3.h" />
     <ClInclude Include="libs\imgui\imgui_impl_opengl3_loader.h" />
     <ClInclude Include="libs\imgui\imgui_stdlib.h" />
+    <ClInclude Include="libs\sol\config.hpp" />
+    <ClInclude Include="libs\sol\forward.hpp" />
     <ClInclude Include="libs\stb\stb_image.h" />
     <ClInclude Include="src\Engine\AssetStore\AssetStore.h" />
     <ClInclude Include="src\Engine\AssetStore\Models\Cube.h" />

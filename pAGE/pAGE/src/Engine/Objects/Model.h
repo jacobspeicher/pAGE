@@ -22,7 +22,7 @@ public:
 	std::vector<glm::vec3> boundingBoxVertices;
 	std::vector<unsigned int> boundingBoxIndices;
 
-	Model(const char* path) {
+	Model(std::string path) {
 		LoadModel(path);
 	}
 

@@ -16,12 +16,14 @@ namespace ShaderLoader {
 			sol::error err = script;
 			std::string errorMsg = err.what();
 			spdlog::error("Error loading shader script: {0}", errorMsg);
+			return;
 		}
 
 		script.call();
 		sol::optional<sol::table> hasAssets = Globals::lua["assets"];
 		if (hasAssets == sol::nullopt) {
 			spdlog::warn("No shaders to load");
+			return;
 		}
 		sol::table assets = hasAssets.value();
 
