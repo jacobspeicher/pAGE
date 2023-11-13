@@ -72,7 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>N:\pAGE\pAGE\pAGE\libs\imgui;C:\SDL2\include;N:\pAGE\pAGE\pAGE\libs;$(IncludePath)</IncludePath>
+    <IncludePath>N:\pAGE\pAGE\pAGE\libs\lua;N:\pAGE\pAGE\pAGE\libs\imgui;C:\SDL2\include;N:\pAGE\pAGE\pAGE\libs;$(IncludePath)</IncludePath>
     <LibraryPath>N:\pAGE\pAGE\pAGE\libs\assimp;N:\pAGE\pAGE\pAGE\libs\glew;N:\pAGE\pAGE\pAGE\libs\lua;C:\SDL2\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -744,7 +744,6 @@
     <ClInclude Include="src\Engine\Objects\Camera.h" />
     <ClInclude Include="src\Engine\Objects\Mesh.h" />
     <ClInclude Include="src\Engine\Objects\Model.h" />
-    <ClInclude Include="src\Engine\Objects\Object.h" />
     <ClInclude Include="src\Engine\Objects\Sprite.h" />
     <ClInclude Include="src\Engine\Systems\RenderDebugBoxSystem.h" />
     <ClInclude Include="src\Engine\Systems\RenderSystem.h" />
@@ -902,6 +901,7 @@
     <None Include="libs\glm\gtx\vector_angle.inl" />
     <None Include="libs\glm\gtx\vector_query.inl" />
     <None Include="libs\glm\gtx\wrap.inl" />
+    <None Include="src\Engine\AssetStore\Scripts\textures.lua" />
     <None Include="src\Engine\Shaders\Basic\Basic2D.frag" />
     <None Include="src\Engine\Shaders\Basic\Basic2D.vert" />
     <None Include="src\Engine\Shaders\Basic\Basic3D.frag" />

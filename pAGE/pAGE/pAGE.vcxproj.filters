@@ -1520,9 +1520,6 @@
     <ClInclude Include="libs\entt\entity\registry.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\Objects\Object.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Engine\Utils\ComponentUIHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -2273,5 +2270,6 @@
     <None Include="src\Engine\Shaders\Basic\BasicGeometry.frag" />
     <None Include="src\Engine\Shaders\Basic\BasicGeometry.shader" />
     <None Include="src\Engine\Shaders\Basic\BasicGeometry.vert" />
+    <None Include="src\Engine\AssetStore\Scripts\textures.lua" />
   </ItemGroup>
 </Project>

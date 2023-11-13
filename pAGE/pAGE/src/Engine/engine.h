@@ -1,8 +1,8 @@
 #pragma once
 
 #include <entt/entt.hpp>
-#include <SDL.h>
 #include <glew/glew.h>
+#include <SDL.h>
 #include <SDL_opengl.h>
 #include <spdlog/spdlog.h>
 
