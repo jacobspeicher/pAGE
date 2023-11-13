@@ -15,7 +15,7 @@
 #include "../Engine/EventBus/EventBus.h"
 #include "../Engine/Events/ProjectLoadedEvent.h"
 
-#include "../structs.h"
+#include "../Structs.h"
 
 class Launcher {
 public:

@@ -8,8 +8,8 @@
 #include "../Objects/Model.h"
 #include "../Objects/Sprite.h"
 
-#include "../Utils/shader.h"
-#include "../Utils/texture.h"
+#include "../Utils/Shader.h"
+#include "../Utils/Texture.h"
 
 struct IComponent {
 	std::string name;

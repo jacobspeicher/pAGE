@@ -5,13 +5,13 @@
 #include <memory>
 #include <string>
 
-#include "Engine/engine.h"
-#include "Launcher/launcher.h"
+#include "Engine/Engine.h"
+#include "Launcher/Launcher.h"
 
 #include "Engine/EventBus/EventBus.h"
 #include "Engine/Events/ProjectLoadedEvent.h"
 
-#include "structs.h"
+#include "Structs.h"
 
 class ProjectManager {
 public:

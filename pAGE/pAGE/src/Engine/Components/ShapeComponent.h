@@ -2,9 +2,9 @@
 
 #include <memory>
 
-#include "../Utils/shader.h"
+#include "../Utils/Shader.h"
 
-#include "structs.h"
+#include "Structs.h"
 
 struct ShapeComponent : IOpenGLComponent {
 public:

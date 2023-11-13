@@ -1,6 +1,6 @@
 #pragma once
 
-#include "structs.h"
+#include "Structs.h"
 
 struct ModelComponent : IModelComponent {
 public:

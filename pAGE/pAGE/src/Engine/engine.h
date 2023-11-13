@@ -20,15 +20,14 @@
 #include "AssetStore/AssetStore.h"
 #include "EventBus/EventBus.h"
 #include "Objects/Camera.h"
-#include "Objects/Object.h"
 #include "Objects/Model.h"
-#include "Utils/shader.h"
+#include "Utils/Shader.h"
 #include "Utils/Loaders/OpenGLObjectsLoader/OpenGLObjectsLoader.h"
 #include "Utils/Loaders/ModelLoader/ModelLoader.h"
 #include "Utils/Loaders/ShaderLoader/ShaderLoader.h"
 #include "Utils/Loaders/TextureLoader/TextureLoader.h"
 
-#include "../structs.h"
+#include "../Structs.h"
 
 class Engine {
 public:

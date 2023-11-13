@@ -154,7 +154,7 @@
     <ClCompile Include="libs\imgui\imgui_stdlib.cpp" />
     <ClCompile Include="libs\stb\stb_image.cpp" />
     <ClCompile Include="src\Engine\AssetStore\AssetStore.cpp" />
-    <ClCompile Include="src\Engine\engine.cpp" />
+    <ClCompile Include="src\Engine\Engine.cpp" />
     <ClCompile Include="libs\glm\detail\glm.cpp" />
     <ClCompile Include="libs\imgui\imgui.cpp" />
     <ClCompile Include="libs\imgui\imgui_demo.cpp" />
@@ -168,8 +168,8 @@
     <ClCompile Include="src\Engine\Utils\Loaders\OpenGLObjectsLoader\OpenGLObjectsLoader.cpp" />
     <ClCompile Include="src\Engine\Utils\Loaders\ShaderLoader\ShaderLoader.cpp" />
     <ClCompile Include="src\Engine\Utils\Loaders\TextureLoader\TextureLoader.cpp" />
-    <ClCompile Include="src\Launcher\launcher.cpp" />
-    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Launcher\Launcher.cpp" />
+    <ClCompile Include="src\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="libs\assimp\aabb.h" />
@@ -267,15 +267,15 @@
     <ClInclude Include="src\Engine\AssetStore\AssetStore.h" />
     <ClInclude Include="src\Engine\AssetStore\Models\Cube.h" />
     <ClInclude Include="src\Engine\AssetStore\Shapes\Triangle.h" />
-    <ClInclude Include="src\Engine\Components\ComponentUI.h" />
+    <ClInclude Include="src\Engine\Utils\ComponentUIHelper.h" />
     <ClInclude Include="src\Engine\Components\DirectionalLightComponent.h" />
     <ClInclude Include="src\Engine\Components\ModelComponent.h" />
     <ClInclude Include="src\Engine\Components\ShapeComponent.h" />
     <ClInclude Include="src\Engine\Components\SpriteComponent.h" />
-    <ClInclude Include="src\Engine\Components\structs.h" />
+    <ClInclude Include="src\Engine\Components\Structs.h" />
     <ClInclude Include="src\Engine\Components\TransformComponent.h" />
     <ClInclude Include="src\Engine\Components\UIEntityNameComponent.h" />
-    <ClInclude Include="src\Engine\engine.h" />
+    <ClInclude Include="src\Engine\Engine.h" />
     <ClInclude Include="libs\entt\config\config.h" />
     <ClInclude Include="libs\entt\config\macro.h" />
     <ClInclude Include="libs\entt\config\version.h" />
@@ -750,16 +750,16 @@
     <ClInclude Include="src\Engine\Systems\RenderSystem.h" />
     <ClInclude Include="src\Engine\Systems\RenderUISystem.h" />
     <ClInclude Include="src\Engine\Systems\SelectObjectSystem.h" />
-    <ClInclude Include="src\Engine\Utils\Globals\globals.h" />
+    <ClInclude Include="src\Engine\Utils\Globals\Globals.h" />
     <ClInclude Include="src\Engine\Utils\Loaders\ModelLoader\ModelLoader.h" />
     <ClInclude Include="src\Engine\Utils\Loaders\OpenGLObjectsLoader\OpenGLObjectsLoader.h" />
     <ClInclude Include="src\Engine\Utils\Loaders\ShaderLoader\ShaderLoader.h" />
     <ClInclude Include="src\Engine\Utils\Loaders\TextureLoader\TextureLoader.h" />
-    <ClInclude Include="src\Engine\Utils\texture.h" />
-    <ClInclude Include="src\Launcher\launcher.h" />
+    <ClInclude Include="src\Engine\Utils\Texture.h" />
+    <ClInclude Include="src\Launcher\Launcher.h" />
     <ClInclude Include="src\ProjectManager.h" />
-    <ClInclude Include="src\structs.h" />
-    <ClInclude Include="src\Engine\Utils\shader.h" />
+    <ClInclude Include="src\Structs.h" />
+    <ClInclude Include="src\Engine\Utils\Shader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="libs\assimp\color4.inl" />
@@ -902,13 +902,13 @@
     <None Include="libs\glm\gtx\vector_angle.inl" />
     <None Include="libs\glm\gtx\vector_query.inl" />
     <None Include="libs\glm\gtx\wrap.inl" />
-    <None Include="src\Engine\Shaders\Basic\basic2D.frag" />
-    <None Include="src\Engine\Shaders\Basic\basic2D.vert" />
-    <None Include="src\Engine\Shaders\Basic\basic3D.frag" />
-    <None Include="src\Engine\Shaders\Basic\basic3D.vert" />
-    <None Include="src\Engine\Shaders\Basic\basicGeometry.frag" />
-    <None Include="src\Engine\Shaders\Basic\basicGeometry.shader" />
-    <None Include="src\Engine\Shaders\Basic\basicGeometry.vert" />
+    <None Include="src\Engine\Shaders\Basic\Basic2D.frag" />
+    <None Include="src\Engine\Shaders\Basic\Basic2D.vert" />
+    <None Include="src\Engine\Shaders\Basic\Basic3D.frag" />
+    <None Include="src\Engine\Shaders\Basic\Basic3D.vert" />
+    <None Include="src\Engine\Shaders\Basic\BasicGeometry.frag" />
+    <None Include="src\Engine\Shaders\Basic\BasicGeometry.shader" />
+    <None Include="src\Engine\Shaders\Basic\BasicGeometry.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

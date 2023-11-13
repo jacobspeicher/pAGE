@@ -7,10 +7,10 @@
 #include <string>
 
 #include "../Objects/Model.h"
-#include "../Utils/shader.h"
-#include "../Utils/texture.h"
+#include "../Utils/Shader.h"
+#include "../Utils/Texture.h"
 
-#include "../../structs.h"
+#include "../../Structs.h"
 
 class AssetStore {
 public:

@@ -4,7 +4,7 @@
 
 #include "../EventBus/Event.h"
 
-#include "../../structs.h"
+#include "../../Structs.h"
 
 class ProjectLoadedEvent : public Event {
 public:

@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "../../shader.h"
+#include "../../Shader.h"
 
 #include "../../../AssetStore/AssetStore.h"
 

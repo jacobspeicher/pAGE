@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "structs.h"
+#include "Structs.h"
 
 struct UIEntityNameComponent : IComponent {
 	std::string entityName;

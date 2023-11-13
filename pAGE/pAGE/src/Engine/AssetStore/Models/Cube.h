@@ -2,7 +2,7 @@
 
 #include <glew/glew.h>
 
-#include "../../../structs.h"
+#include "../../../Structs.h"
 
 struct Cube : IOpenGLObject {
 public:

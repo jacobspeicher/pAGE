@@ -1,4 +1,4 @@
-#include "launcher.h"
+#include "Launcher.h"
 
 Launcher::Launcher() {
 	isRunning = false;

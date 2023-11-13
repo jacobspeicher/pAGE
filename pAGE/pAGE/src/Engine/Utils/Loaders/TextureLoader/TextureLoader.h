@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "../../texture.h"
+#include "../../Texture.h"
 
 #include "../../../AssetStore/AssetStore.h"
 

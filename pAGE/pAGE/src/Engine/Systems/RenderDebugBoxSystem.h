@@ -12,7 +12,7 @@
 #include "../Components/ModelComponent.h"
 #include "../AssetStore/AssetStore.h"
 #include "../Objects/Camera.h"
-#include "../Utils/shader.h"
+#include "../Utils/Shader.h"
 
 void RenderDebugBoxSystem(entt::registry& registry, Camera& camera, AssetStore& assetStore) {
 	std::shared_ptr<Shader> shader = assetStore.GetShader("basicGeometry");
