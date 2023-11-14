@@ -1,42 +1,38 @@
 #include "TextureLoader.h"
 
-#include <spdlog/spdlog.h>
-
-#include "../../Globals/Globals.h"
-
 namespace TextureLoader {
 	void LoadTextures(AssetStore& assetStore) {
 		std::string path = std::filesystem::current_path().string();
 		std::replace(path.begin(), path.end(), '\\', '/');
-		path += "/src/Engine/AssetStore/Scripts/textures.lua";
+		path += "/src/Engine/DataStore/textures.json";
 
-		sol::load_result script = Globals::lua.load_file(path);
+		rapidjson::Document document;
 
-		if (!script.valid()) {
-			sol::error err = script;
-			std::string errorMsg = err.what();
-			spdlog::error("TEXTURE LOADER : Error loading texture script: {0}", errorMsg);
+		std::ifstream ifs(path);
+		rapidjson::IStreamWrapper isw(ifs);
+
+		document.ParseStream(isw);
+
+		if (document.HasParseError()) {
+			std::string errorMsg = static_cast<std::string>(rapidjson::GetParseError_En(document.GetParseError()));
+			spdlog::error("TEXTURE LOADER : Error loading texture data: {0}", errorMsg);
 			return;
 		}
 
-		script.call();
-		sol::optional<sol::table> hasAssets = Globals::lua["assets"];
-		if (hasAssets == sol::nullopt) {
-			spdlog::warn("TEXTURE LOADER : No textures to load");
-			return;
-		}
-		sol::table assets = hasAssets.value();
-
-		for (auto& asset : assets) {
-			std::string textureName = asset.first.as<std::string>();
-			sol::table textureFiles = asset.second.as<sol::table>();
+		for (
+			rapidjson::Value::ConstMemberIterator itr = document.MemberBegin();
+			itr != document.MemberEnd();
+			++itr
+			) {
+			std::string assetName = itr->name.GetString();
+			auto assetFiles = itr->value.GetObj();
 
 			std::shared_ptr<Texture> texture = std::make_shared<Texture>(
-				textureFiles["diffuse"].get_or(std::string("")),
-				textureFiles["specular"].get_or(std::string(""))
+				assetFiles.HasMember("diffuse") ? assetFiles["diffuse"].GetString() : "",
+				assetFiles.HasMember("specular") ? assetFiles["specular"].GetString() : ""
 			);
 
-			assetStore.AddTexture(textureName, texture);
+			assetStore.AddTexture(assetName, texture);
 		}
 	}
 }

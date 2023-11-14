@@ -4,6 +4,7 @@
 
 class Globals {
 public:
+
 	/* Scripting */
 	static sol::state lua;
 

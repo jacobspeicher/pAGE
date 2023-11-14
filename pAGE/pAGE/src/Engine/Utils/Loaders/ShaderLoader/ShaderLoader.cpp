@@ -1,43 +1,39 @@
 #include "ShaderLoader.h"
 
-#include <spdlog/spdlog.h>
-
-#include "../../Globals/Globals.h"
-
 namespace ShaderLoader {
 	void LoadShaders(AssetStore& assetStore) {
 		std::string path = std::filesystem::current_path().string();
 		std::replace(path.begin(), path.end(), '\\', '/');
-		path += "/src/Engine/AssetStore/Scripts/shaders.lua";
+		path += "/src/Engine/DataStore/shaders.json";
 
-		sol::load_result script = Globals::lua.load_file(path);
+		rapidjson::Document document;
 
-		if (!script.valid()) {
-			sol::error err = script;
-			std::string errorMsg = err.what();
-			spdlog::error("SHADER LOADER : Error loading shader script: {0}", errorMsg);
+		std::ifstream ifs(path);
+		rapidjson::IStreamWrapper isw(ifs);
+
+		document.ParseStream(isw);
+
+		if (document.HasParseError()) {
+			std::string errorMsg = static_cast<std::string>(rapidjson::GetParseError_En(document.GetParseError()));
+			spdlog::error("SHADER LOADER : Error loading shader data: {0}", errorMsg);
 			return;
 		}
 
-		script.call();
-		sol::optional<sol::table> hasAssets = Globals::lua["assets"];
-		if (hasAssets == sol::nullopt) {
-			spdlog::warn("SHADER LOADER : No shaders to load");
-			return;
-		}
-		sol::table assets = hasAssets.value();
-
-		for (auto& asset : assets) {
-			std::string shaderName = asset.first.as<std::string>();
-			sol::table shaderFiles = asset.second.as<sol::table>();
+		for (
+			rapidjson::Value::ConstMemberIterator itr = document.MemberBegin();
+			itr != document.MemberEnd();
+			++itr
+			) {
+			std::string assetName = itr->name.GetString();
+			auto assetFiles = itr->value.GetObj();
 
 			std::shared_ptr<Shader> shader = std::make_shared<Shader>(
-				shaderFiles["vert"],
-				shaderFiles["frag"],
-				shaderFiles["geo"].get_or(std::string(""))
+				assetFiles["vert"].GetString(),
+				assetFiles["frag"].GetString(),
+				assetFiles.HasMember("geo") ? assetFiles["geo"].GetString() : ""
 			);
 
-			assetStore.AddShader(shaderName, shader);
+			assetStore.AddShader(assetName, shader);
 		}
 	}
 }
