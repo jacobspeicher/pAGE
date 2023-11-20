@@ -234,8 +234,13 @@ void Engine::Render() {
 	glViewport(0, 0, 1200, 720);
 	// render to framebuffer to create texture for scene viewport
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-	glClearColor(.2f, .2f, .2f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	static const float editorClearColor[] = { .2f, .2f, .2f, 1.0f };
+	glClearBufferfv(GL_COLOR, 0, editorClearColor);
+	static const float black[] = { .0f, .0f, .0f, 1.0f };
+	glClearBufferfv(GL_COLOR, 1, black);
+	static const float depth = 1.0f;
+	glClearBufferfv(GL_DEPTH, 0, &depth);
+
 	RenderSystem(registry, camera);
 	if (Globals::debug)
 		RenderDebugBoxSystem(registry, camera, assetStore);

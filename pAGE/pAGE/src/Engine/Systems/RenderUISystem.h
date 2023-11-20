@@ -61,6 +61,7 @@ void ShowSceneHierarchy(entt::registry& registry, AssetStore& assetStore) {
 	if (ImGui::BeginMenuBar()) {
 		if (ImGui::BeginMenu("2D")) {
 			if (ImGui::MenuItem("Triangle")) {
+				static int num = 0;
 				auto triangle = registry.create();
 				std::string name = "Triangle (" + std::to_string((long)triangle) + ")";
 				registry.emplace<UIEntityNameComponent>(triangle, name);
@@ -71,33 +72,37 @@ void ShowSceneHierarchy(entt::registry& registry, AssetStore& assetStore) {
 		if (ImGui::BeginMenu("3D")) {
 			ImGui::SeparatorText("Basic");
 			if (ImGui::MenuItem("Cube")) {
+				static int num = 0;
 				std::shared_ptr<Shader> shader = assetStore.GetShader("basic3D");
 				auto cube = registry.create();
-				std::string name = "Cube (" + std::to_string((long)cube) + ")";
+				std::string name = "Cube " + std::to_string(num);
 				registry.emplace<UIEntityNameComponent>(cube, name);
 				registry.emplace<TransformComponent>(cube, glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f));
 				registry.emplace<ModelComponent>(cube, assetStore.GetModel("cube"), shader);
 			}
 			if (ImGui::MenuItem("Sphere")) {
+				static int num = 0;
 				std::shared_ptr<Shader> shader = assetStore.GetShader("basic3D");
 				auto sphere = registry.create();
-				std::string name = "Sphere (" + std::to_string((long)sphere) + ")";
+				std::string name = "Sphere " + std::to_string(num);
 				registry.emplace<UIEntityNameComponent>(sphere, name);
 				registry.emplace<TransformComponent>(sphere, glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f));
 				registry.emplace<ModelComponent>(sphere, assetStore.GetModel("sphere"), shader);
 			}
 			if (ImGui::MenuItem("Cylinder")) {
+				static int num = 0;
 				std::shared_ptr<Shader> shader = assetStore.GetShader("basic3D");
 				auto cylinder = registry.create();
-				std::string name = "Cylinder (" + std::to_string((long)cylinder) + ")";
+				std::string name = "Cylinder " + std::to_string(num);
 				registry.emplace<UIEntityNameComponent>(cylinder, name);
 				registry.emplace<TransformComponent>(cylinder, glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f));
 				registry.emplace<ModelComponent>(cylinder, assetStore.GetModel("cylinder"), shader);
 			}
 			if (ImGui::MenuItem("Cone")) {
+				static int num = 0;
 				std::shared_ptr<Shader> shader = assetStore.GetShader("basic3D");
 				auto cone = registry.create();
-				std::string name = "Cone (" + std::to_string((long)cone) + ")";
+				std::string name = "Cone " + std::to_string(num);
 				registry.emplace<UIEntityNameComponent>(cone, name);
 				registry.emplace<TransformComponent>(cone, glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f));
 				registry.emplace<ModelComponent>(cone, assetStore.GetModel("cone"), shader);
@@ -105,9 +110,10 @@ void ShowSceneHierarchy(entt::registry& registry, AssetStore& assetStore) {
 
 			ImGui::SeparatorText("Custom");
 			if (ImGui::MenuItem("Backpack")) {
+				static int num = 0;
 				std::shared_ptr<Shader> shader = assetStore.GetShader("basic3D");
 				auto backpack = registry.create();
-				std::string name = "Backpack (" + std::to_string((long)backpack) + ")";
+				std::string name = "Backpack " + std::to_string(num);
 				registry.emplace<UIEntityNameComponent>(backpack, name);
 				registry.emplace<TransformComponent>(backpack, glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f));
 				registry.emplace<ModelComponent>(backpack, assetStore.GetModel("backpack"), shader);
@@ -116,8 +122,9 @@ void ShowSceneHierarchy(entt::registry& registry, AssetStore& assetStore) {
 		}
 		if (ImGui::BeginMenu("Lights")) {
 			if (ImGui::MenuItem("Directional")) {
+				static int num = 0;
 				auto directional = registry.create();
-				std::string name = "Directional (" + std::to_string((long)directional) + ")";
+				std::string name = "Directional " + std::to_string(num);
 				std::shared_ptr<Sprite> sprite = std::make_shared<Sprite>();
 				registry.emplace<UIEntityNameComponent>(directional, name);
 				registry.emplace<TransformComponent>(directional, glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f));
@@ -244,9 +251,9 @@ void SelectSceneObject(entt::registry& registry, AssetStore& assetStore, glm::ve
 			unsigned char data[3];
 			glReadPixels((GLint)regionMouse.x, (GLint)(720 - regionMouse.y), (GLint)1, (GLint)1, GL_RGB, GL_UNSIGNED_BYTE, data);
 
-			if (data[1] == 0) {
+			if (data[2] != 0) {
 				for (const entt::entity entity : entityView) {
-					if ((long)entity == data[0]) {
+					if ((long)entity == data[2] - 1.0f) {
 						Globals::selected = (long)entity;
 						break;
 					}

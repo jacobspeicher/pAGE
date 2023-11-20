@@ -52,7 +52,7 @@ void RenderSprites(entt::registry& registry, Camera& camera, Matrices& matrices)
 		spriteComponent.shader->SetMat4("view", matrices["view"]);
 		spriteComponent.shader->SetVec3("viewPos", camera.Position);
 		spriteComponent.shader->SetMat4("model", matrices["model"]);
-		spriteComponent.shader->SetVec3("selColor", glm::vec3((long)entity / 255.0f, 0.0f, 0.0f));
+		spriteComponent.shader->SetVec3("selColor", glm::vec3(0.0f, 0.0f, ((long)entity + 1) / 255.0f));
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, spriteComponent.texture->diffuse);
@@ -86,7 +86,7 @@ void RenderModels(entt::registry& registry, Camera& camera, Matrices& matrices) 
 		modelComponent.shader->SetVec3("viewPos", camera.Position);
 		modelComponent.shader->SetMat4("model", matrices["model"]);
 
-		modelComponent.shader->SetVec3("selColor", glm::vec3((long)entity / 255.0f, 0.0f, 0.0f));
+		modelComponent.shader->SetVec3("selColor", glm::vec3(0.0f, 0.0f, ((long)entity + 1) / 255.0f));
 
 		modelComponent.shader->SetFloat("material.shininess", 256.0f);
 
