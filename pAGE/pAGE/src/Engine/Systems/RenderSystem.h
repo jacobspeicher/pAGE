@@ -86,7 +86,7 @@ void RenderModels(entt::registry& registry, Camera& camera, Matrices& matrices) 
 		modelComponent.shader->SetVec3("viewPos", camera.Position);
 		modelComponent.shader->SetMat4("model", matrices["model"]);
 
-		modelComponent.shader->SetVec3("selColor", glm::vec3(0.0f, 0.0f, ((long)entity + 1) / 255.0f));
+		modelComponent.shader->SetVec3("selColor", glm::vec3(0.0f, 0.0f, (long)entity / 255.0f));
 
 		modelComponent.shader->SetFloat("material.shininess", 256.0f);
 

@@ -236,8 +236,8 @@ void Engine::Render() {
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 	static const float editorClearColor[] = { .2f, .2f, .2f, 1.0f };
 	glClearBufferfv(GL_COLOR, 0, editorClearColor);
-	static const float black[] = { .0f, .0f, .0f, 1.0f };
-	glClearBufferfv(GL_COLOR, 1, black);
+	static const float white[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	glClearBufferfv(GL_COLOR, 1, white);
 	static const float depth = 1.0f;
 	glClearBufferfv(GL_DEPTH, 0, &depth);
 

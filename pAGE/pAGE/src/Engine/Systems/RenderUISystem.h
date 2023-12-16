@@ -251,9 +251,10 @@ void SelectSceneObject(entt::registry& registry, AssetStore& assetStore, glm::ve
 			unsigned char data[3];
 			glReadPixels((GLint)regionMouse.x, (GLint)(720 - regionMouse.y), (GLint)1, (GLint)1, GL_RGB, GL_UNSIGNED_BYTE, data);
 
-			if (data[2] != 0) {
+			static unsigned char white[3] = { 255, 255, 255 };
+			if (memcmp(data, white, 3) != 0) {
 				for (const entt::entity entity : entityView) {
-					if ((long)entity == data[2] - 1.0f) {
+					if ((long)entity == data[2]) {
 						Globals::selected = (long)entity;
 						break;
 					}
